@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>牛客网SQL刷题总结 | my-blog</title><meta name="author" content="zhq"><meta name="copyright" content="zhq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.去重复数据 关键字：distinct  select distinct university  from user_profile  2. 过滤空值where 列名 is not &#39;null&#39;  where 列名 !&#x3D; &#39;null&#39; where 列名 &lt;&gt; &#39;null&#39;   3. 多个匹配值 关键字：in  select device">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>牛客网SQL刷题总结 | my-blog</title><meta name="author" content="zhq"><meta name="copyright" content="zhq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="总结-基础知识 牛客网在线编程_SQL篇_SQL快速入门  去重复数据 关键字：distinct  select distinct university  from user_profile  过滤空值where 列名 is not &#39;null&#39;  where 列名 !&#x3D; &#39;null&#39; where 列名 &lt;&gt; &#39;null&#39;   多个匹配值">
 <meta property="og:type" content="article">
 <meta property="og:title" content="牛客网SQL刷题总结">
 <meta property="og:url" content="http://example.com/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="my-blog">
-<meta property="og:description" content="1.去重复数据 关键字：distinct  select distinct university  from user_profile  2. 过滤空值where 列名 is not &#39;null&#39;  where 列名 !&#x3D; &#39;null&#39; where 列名 &lt;&gt; &#39;null&#39;   3. 多个匹配值 关键字：in  select device">
+<meta property="og:description" content="总结-基础知识 牛客网在线编程_SQL篇_SQL快速入门  去重复数据 关键字：distinct  select distinct university  from user_profile  过滤空值where 列名 is not &#39;null&#39;  where 列名 !&#x3D; &#39;null&#39; where 列名 &lt;&gt; &#39;null&#39;   多个匹配值">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-07-14T02:08:03.000Z">
-<meta property="article:modified_time" content="2025-07-14T02:55:01.245Z">
+<meta property="article:modified_time" content="2025-07-14T03:25:01.728Z">
 <meta property="article:author" content="zhq">
 <meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
@@ -18,7 +18,7 @@
   "url": "http://example.com/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2025-07-14T02:08:03.000Z",
-  "dateModified": "2025-07-14T02:55:01.245Z",
+  "dateModified": "2025-07-14T03:25:01.728Z",
   "author": [
     {
       "@type": "Person",
@@ -159,21 +159,696 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">my-blog</span></a><a class="nav-page-title" href="/"><span class="site-name">牛客网SQL刷题总结</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">牛客网SQL刷题总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-14T02:08:03.000Z" title="发表于 2025-07-14 10:08:03">2025-07-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-14T02:55:01.245Z" title="更新于 2025-07-14 10:55:01">2025-07-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%94%BF%E5%8A%A1%E6%95%B0%E6%8D%AE-%E5%AE%9E%E4%B9%A0/">政务数据_实习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-去重复数据"><a href="#1-去重复数据" class="headerlink" title="1.去重复数据"></a>1.去重复数据</h2><blockquote>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">my-blog</span></a><a class="nav-page-title" href="/"><span class="site-name">牛客网SQL刷题总结</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">牛客网SQL刷题总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-14T02:08:03.000Z" title="发表于 2025-07-14 10:08:03">2025-07-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-14T03:25:01.728Z" title="更新于 2025-07-14 11:25:01">2025-07-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%94%BF%E5%8A%A1%E6%95%B0%E6%8D%AE-%E5%AE%9E%E4%B9%A0/">政务数据_实习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="总结-基础知识"><a href="#总结-基础知识" class="headerlink" title="总结-基础知识"></a>总结-基础知识</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.nowcoder.com/exam/oj?page=1&tab=SQL%E7%AF%87&topicId=199">牛客网在线编程_SQL篇_SQL快速入门</a></p>
+</blockquote>
+<h2 id="去重复数据"><a href="#去重复数据" class="headerlink" title="去重复数据"></a>去重复数据</h2><blockquote>
 <p>关键字：<code>distinct</code></p>
 </blockquote>
 <pre><code class="language-sql">select distinct university 
 from user_profile
 </code></pre>
-<h2 id="2-过滤空值"><a href="#2-过滤空值" class="headerlink" title="2. 过滤空值"></a>2. 过滤空值</h2><pre><code class="language-sql">where 列名 is not &#39;null&#39; 
+<h2 id="过滤空值"><a href="#过滤空值" class="headerlink" title="过滤空值"></a>过滤空值</h2><pre><code class="language-sql">where 列名 is not &#39;null&#39; 
 where 列名 != &#39;null&#39;
 where 列名 &lt;&gt; &#39;null&#39; 
 </code></pre>
-<h2 id="3-多个匹配值"><a href="#3-多个匹配值" class="headerlink" title="3. 多个匹配值"></a>3. 多个匹配值</h2><blockquote>
+<h2 id="多个匹配值"><a href="#多个匹配值" class="headerlink" title="多个匹配值"></a>多个匹配值</h2><blockquote>
 <p>关键字：<code>in</code></p>
 </blockquote>
 <pre><code class="language-sql">select device_id,gender,age,university,gpa
 from user_profile
 where university in (&#39;北京大学&#39;,&#39;复旦大学&#39;,&#39;山东大学&#39;) 
 </code></pre>
-<h2 id="4-模糊查询（匹配字符串）"><a href="#4-模糊查询（匹配字符串）" class="headerlink" title="4. 模糊查询（匹配字符串）"></a>4. 模糊查询（匹配字符串）</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">zhq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/">http://example.com/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">my-blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SQL/">SQL</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/07/14/%E5%BC%80%E5%A4%A9%E8%BE%9F%E5%9C%B0/" title="开天辟地"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">开天辟地</div></div><div class="info-2"><div class="info-item-1">1.第一次使用Hexo2.测试图片功能 </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zhq</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8E%BB%E9%87%8D%E5%A4%8D%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">1.去重复数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%87%E6%BB%A4%E7%A9%BA%E5%80%BC"><span class="toc-number">2.</span> <span class="toc-text">2. 过滤空值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%A4%9A%E4%B8%AA%E5%8C%B9%E9%85%8D%E5%80%BC"><span class="toc-number">3.</span> <span class="toc-text">3. 多个匹配值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2%EF%BC%88%E5%8C%B9%E9%85%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">4. 模糊查询（匹配字符串）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/" title="牛客网SQL刷题总结">牛客网SQL刷题总结</a><time datetime="2025-07-14T02:08:03.000Z" title="发表于 2025-07-14 10:08:03">2025-07-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/14/%E5%BC%80%E5%A4%A9%E8%BE%9F%E5%9C%B0/" title="开天辟地">开天辟地</a><time datetime="2025-07-14T01:41:37.000Z" title="发表于 2025-07-14 09:41:37">2025-07-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/14/hello-world/" title="Hello World">Hello World</a><time datetime="2025-07-14T00:53:58.549Z" title="发表于 2025-07-14 08:53:58">2025-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By zhq</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+<h2 id="模糊查询（匹配字符串）"><a href="#模糊查询（匹配字符串）" class="headerlink" title="模糊查询（匹配字符串）"></a>模糊查询（匹配字符串）</h2><blockquote>
+<p>关键字：<code>like</code>   或者   <code>not like</code></p>
+</blockquote>
+<pre><code class="language-sql">select device_id,age,university
+from user_profile
+where university like &#39;北京%&#39;
+</code></pre>
+<blockquote>
+<p>北京%：列名以北京开头</p>
+<p>%北京：列名以北京结束</p>
+<p>%北京%：列名中包括北京</p>
+</blockquote>
+<h2 id="MAX-最大函数值"><a href="#MAX-最大函数值" class="headerlink" title="MAX()最大函数值"></a>MAX()最大函数值</h2><blockquote>
+<p>关键字：max()</p>
+</blockquote>
+<pre><code class="language-sql">select max(gpa) as gpa
+from user_profile
+where university = &#39;复旦大学&#39;
+</code></pre>
+<h2 id="avg-求平均值"><a href="#avg-求平均值" class="headerlink" title="avg()求平均值"></a>avg()求平均值</h2><pre><code class="language-sql">select  count(gender) as male_num,round(avg(gpa),1) as avg_gpa
+from user_profile
+where gender = &#39;male&#39;
+</code></pre>
+<h2 id="round-四舍五入"><a href="#round-四舍五入" class="headerlink" title="round()四舍五入"></a>round()四舍五入</h2><blockquote>
+<p><code>round(avg(gpa),1)</code>其中第二个参数表示保留一位小数</p>
+</blockquote>
+<pre><code class="language-sql">select  count(gender) as male_num,round(avg(gpa),1) as avg_gpa
+from user_profile
+where gender = &#39;male&#39;
+</code></pre>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
+<p>关键字：<code>order by</code> 字段 ASC</p>
+<p>​	ASC:默认  升序</p>
+<p>​	DESC:  降序</p>
+<p>——对多个字段排序时，按照书写的先后顺序依次排列</p>
+</blockquote>
+<pre><code class="language-sql">select
+    gender,university,count(device_id) as user_num,round(avg(active_days_within_30),1) as avg_active_day,round(avg(question_cnt),1) as avg_question_cnt
+from
+    user_profile
+group by gender,university
+order by gender ASC,university ASC
+</code></pre>
+<blockquote>
+<p>先按照gender(性别)排序，在每个性别里面再按照university字段排序</p>
+</blockquote>
+<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><blockquote>
+<p>关键字：<code>group by</code> 字段</p>
+<p>多个字段使用<code>,</code>分隔</p>
+</blockquote>
+<pre><code class="language-sql">select
+    gender,university,count(device_id) as user_num,round(avg(active_days_within_30),1) as avg_active_day,round(avg(question_cnt),1) as avg_question_cnt
+from
+    user_profile
+group by gender,university
+order by gender ASC,university ASC
+</code></pre>
+<h3 id="对分组的字段，条件查询"><a href="#对分组的字段，条件查询" class="headerlink" title="对分组的字段，条件查询"></a>对分组的字段，条件查询</h3><blockquote>
+<p>关键字：having    </p>
+<p>当对字段进行<code>group by</code>分组之后，就不能使用where来限制条件，必须使用having</p>
+</blockquote>
+<pre><code class="language-sql">select
+    university,
+    round(avg(question_cnt), 3) as avg_question_cnt,
+    round(avg(answer_cnt), 3) as avg_answer_cnt
+from
+    user_profile
+group by
+    university
+having 
+    avg(question_cnt)&lt;5 or avg(answer_cnt) &lt;20
+</code></pre>
+<h2 id="多表连接-21-25"><a href="#多表连接-21-25" class="headerlink" title="多表连接 21-25"></a>多表连接 21-25</h2><h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><blockquote>
+<p>注意点：子查询中不存在多表之间的联系，是使用<code>in</code>等关键字匹配字段的值来连接。</p>
+<p>即 <code>from</code>关键字后都只有一个表</p>
+</blockquote>
+<pre><code class="language-sql">select device_id,question_id,result
+from
+    question_practice_detail
+where 
+question_practice_detail.device_id in
+(
+    select device_id
+    from user_profile
+    where university = &#39;浙江大学&#39;
+)
+</code></pre>
+<h3 id="内连接–INNER-JOIN"><a href="#内连接–INNER-JOIN" class="headerlink" title="内连接–INNER JOIN"></a>内连接–INNER JOIN</h3><blockquote>
+<p>关键字：<code>INNER JOIN</code>  连接的表名  <code>on</code>  关联的字段</p>
+<p>后续可使用<code>where</code>关键字作筛选</p>
+</blockquote>
+<pre><code class="language-sql">select question_practice_detail.device_id,question_id,result
+from
+    question_practice_detail
+Inner JOIN user_profile 
+on question_practice_detail.device_id = user_profile.device_id
+where university = &#39;浙江大学&#39;
+</code></pre>
+<blockquote>
+<p>在使用多个<code>INNER JOIN</code>关键字内连接其他表时，第一个表的字段与第二个表的字段连接，第二个表的字段与第三个表的字段连接。</p>
+</blockquote>
+<h3 id="左右连接29"><a href="#左右连接29" class="headerlink" title="左右连接29"></a>左右连接29</h3><blockquote>
+<p>当结果中出现某一列需要输出为<code>null</code>的字段值，这么就使用左右连接</p>
+</blockquote>
+<pre><code class="language-sql">select Products.prod_name,OrderItems.order_num
+from Products
+left JOIN OrderItems
+on Products.prod_id = OrderItems.prod_id 
+order by prod_name
+</code></pre>
+<blockquote>
+<img src="/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/image-20250711085747146.png" class="" alt="image-20250711085747146"></blockquote>
+<pre><code class="language-sql">SELECT
+    ROUND(
+        SUM(CASE WHEN p2.device_id IS NOT NULL THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        4
+    ) AS avg_ret
+    # 也可以表示为
+    # COUNT(q2.device_id) / COUNT(q1.device_id) AS avg_ret
+    # 对于count（）函数计数时不会统计值为null的条目
+    # 因为是最左连接，会将p1表中的数据都显示，而只会显示符合条件的p2中留存的数据，否则为空
+        # 也就是说对于同一个人来说，第一天刷题，才会有p1.device_id。第二天刷题了，才会有p2.device_id，否则为空
+FROM
+    (
+        SELECT 
+            DISTINCT device_id,
+            date
+        FROM
+            question_practice_detail
+    ) p1
+LEFT JOIN (
+        SELECT 
+            DISTINCT device_id,
+            date
+        FROM
+            question_practice_detail
+    ) p2 
+ON p1.device_id = p2.device_id AND p2.date = DATE_ADD(p1.date, INTERVAL 1 DAY);
+</code></pre>
+<h3 id="内连接与左右连接的区别"><a href="#内连接与左右连接的区别" class="headerlink" title="内连接与左右连接的区别"></a>内连接与左右连接的区别</h3><table>
+<thead>
+<tr>
+<th align="left">连接类型</th>
+<th align="left">行为</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>INNER JOIN</strong></td>
+<td align="left">只返回两个表中<strong>匹配的行</strong></td>
+<td align="left">只关心两个表都存在的关联数据</td>
+</tr>
+<tr>
+<td align="left"><strong>LEFT JOIN</strong></td>
+<td align="left">返回<strong>左表所有行</strong> + 右表<strong>匹配的行</strong>（右表无匹配则补 <code>NULL</code>）</td>
+<td align="left">即使右表没有匹配，也要保留左表数据</td>
+</tr>
+<tr>
+<td align="left"><strong>RIGHT JOIN</strong></td>
+<td align="left">返回<strong>右表所有行</strong> + 左表<strong>匹配的行</strong>（左表无匹配则补 <code>NULL</code>）</td>
+<td align="left">即使左表没有匹配，也要保留右表数据</td>
+</tr>
+</tbody></table>
+<h3 id="联合查询-25"><a href="#联合查询-25" class="headerlink" title="联合查询 25"></a>联合查询 25</h3><blockquote>
+<p>关键字：<code>UNION ALL</code> 或<code>UNION</code></p>
+<p><code>UNION</code>:表示将两个查询结果连接起来，并且<strong>去重</strong></p>
+<p><code>UNION ALL</code>:表示将两个查询结果连接起来，但是不<strong>去重</strong></p>
+</blockquote>
+<pre><code class="language-sql">select device_id,gender,age,gpa
+from user_profile
+where university = &#39;山东大学&#39;
+union ALL
+select device_id,gender,age,gpa
+from user_profile
+where gender = &#39;male
+</code></pre>
+<blockquote>
+<ul>
+<li><strong>结果集</strong>：包含两类数据的并集：<ol>
+<li>山东大学的所有学生（无论性别）。</li>
+<li>所有男性学生（无论学校）。</li>
+</ol>
+</li>
+<li><strong>重复数据</strong>：如果一个山东大学的学生同时也是男性，则该学生的记录会 <strong>出现两次</strong>（因为 <code>UNION ALL</code> 保留重复）。</li>
+</ul>
+</blockquote>
+<h2 id="条件逻辑"><a href="#条件逻辑" class="headerlink" title="条件逻辑"></a>条件逻辑</h2><blockquote>
+<p>关键字：</p>
+<pre><code class="language-sql">CASE
+ WHEN condition1 THEN result1
+ WHEN condition2 THEN result2
+ ...
+ ELSE default_result
+END
+</code></pre>
+<p>当符合条件condition1时，将他设置为result1</p>
+</blockquote>
+<pre><code class="language-sql">select
+    case
+        when
+            age &lt; 25
+            or age is null then &#39;25岁以下&#39;
+            else &#39;25岁及以上&#39;
+    end as age_cut,
+    count(device_id) as number
+from
+    user_profile
+GROUP BY
+    age_cut
+</code></pre>
+<h2 id="年月日函数28"><a href="#年月日函数28" class="headerlink" title="年月日函数28"></a>年月日函数28</h2><blockquote>
+<p>date:2021-05-03</p>
+<p><code> year(date)</code>:取出date数据中的年  2021</p>
+<p><code>month(date)</code>:取出date数据中的月  05</p>
+<p><code>day(date)</code>:取出date数据中的日 03</p>
+</blockquote>
+<pre><code class="language-sql">select day(date) as day,count(question_id) as question_cnt
+from question_practice_detail
+where month(date) = 8 and year(date) = 2021
+group by date
+</code></pre>
+<h2 id="Date函数29"><a href="#Date函数29" class="headerlink" title="Date函数29"></a>Date函数29</h2><table>
+<thead>
+<tr>
+<th align="left">函数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_now.asp">NOW()</a></td>
+<td align="left">返回当前的日期和时间</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_curdate.asp">CURDATE()</a></td>
+<td align="left">返回当前的日期</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_curtime.asp">CURTIME()</a></td>
+<td align="left">返回当前的时间</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_date.asp">DATE()</a></td>
+<td align="left">提取日期或日期&#x2F;时间表达式的日期部分</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_extract.asp">EXTRACT()</a></td>
+<td align="left">返回日期&#x2F;时间按的单独部分</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_date_add.asp">DATE_ADD()</a></td>
+<td align="left">给日期添加指定的时间间隔</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_date_sub.asp">DATE_SUB()</a></td>
+<td align="left">从日期减去指定的时间间隔</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_datediff_mysql.asp">DATEDIFF()</a></td>
+<td align="left">返回两个日期之间的天数</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/func_date_format.asp">DATE_FORMAT()</a></td>
+<td align="left">用不同的格式显示日期&#x2F;时间</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>date_add()函数：<code>DATE_ADD(date,INTERVAL expr type)</code></p>
+<p>​	<em>date</em> 参数是合法的日期表达式。<em>expr</em> 参数是您希望添加的时间间隔。type参数是day,mouth,year等值。</p>
+<p>​		如果希望向 “OrderDate” 添加 2 天，<code>DATE_ADD(OrderDate,INTERVAL 2 DAY)</code>。</p>
+</blockquote>
+<img src="/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/image-20250709150940731.png" class="" alt="image-20250709150940731">
+
+<pre><code class="language-sql">SELECT
+    ROUND(
+        SUM(CASE WHEN p2.device_id IS NOT NULL THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        4
+    ) AS avg_ret
+    # 也可以表示为
+    # COUNT(q2.device_id) / COUNT(q1.device_id) AS avg_ret
+    # 对于count（）函数计数时不会统计值为null的条目
+    # 因为是最左 连接，会将p1表中的数据都显示，而只会显示符合条件的p2中留存的数据，否则为空
+        # 也就是说对于同一个人来说，第一天刷题，才会有p1.device_id。第二天刷题了，才会有p2.device_id，否则为空
+FROM
+    (
+        SELECT 
+            DISTINCT device_id,
+            date
+        FROM
+            question_practice_detail
+    ) p1
+LEFT JOIN (
+        SELECT 
+            DISTINCT device_id,
+            date
+        FROM
+            question_practice_detail
+    ) p2 
+ON p1.device_id = p2.device_id AND p2.date = DATE_ADD(p1.date, INTERVAL 1 DAY);
+</code></pre>
+<h2 id="字符串截取30-拼接，转大小写"><a href="#字符串截取30-拼接，转大小写" class="headerlink" title="字符串截取30,拼接，转大小写"></a>字符串截取30,拼接，转大小写</h2> <img src="/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/image-20250709151301784.png" class="" alt="image-20250709151301784">
+
+<pre><code class="language-sql">SELECT SUBSTRING_INDEX(profile,&quot;,&quot;,-1) gender,COUNT(*) number
+FROM user_submit
+GROUP BY gender;
+</code></pre>
+<blockquote>
+<ul>
+<li>使用 <code>GROUP BY gender</code> 后，SQL 会先按 <code>gender</code> 分类，再分别计算每组的 <code>COUNT(*)</code>。</li>
+</ul>
+</blockquote>
+<blockquote>
+<pre><code class="language-sql">字符串的截取：substring(字符串，起始位置，截取字符数）
+取字符串左边 size个字符:left(column_name,int size)
+字符串的拼接：concat(字符串1，字符串2，字符串3,...)
+字母大写：upper(字符串）
+字母小写：lower(字符串）
+</code></pre>
+</blockquote>
+<h3 id="case语句-模糊查询-笨蛋题解"><a href="#case语句-模糊查询-笨蛋题解" class="headerlink" title="case语句+模糊查询&#x3D;笨蛋题解"></a>case语句+模糊查询&#x3D;笨蛋题解</h3><pre><code class="language-sql">select
+    case
+        when profile like &#39;%,male&#39; then &#39;male&#39;
+        when profile like &#39;%,female&#39; then &#39;female&#39;
+    end gender,
+    count(device_id) as number
+from
+    user_submit
+group by
+    gender;
+</code></pre>
+<h2 id="窗口函数33-41"><a href="#窗口函数33-41" class="headerlink" title="窗口函数33,41"></a>窗口函数33,41</h2><blockquote>
+<p>窗口函数</p>
+</blockquote>
+<blockquote>
+<pre><code class="language-sql">SELECT *, DENSE_RANK() OVER (PARTITION BY university ORDER BY gpa) AS dr
+FROM user_profile
+</code></pre>
+</blockquote>
+<pre><code class="language-sql"># 严格连续编号，即使分数相同也分配不同序号。ROW_NUMBER()
+
+# 每个大学中GPA最低的所有学生（包括并列情况）：DENSE_RANK()
+SELECT device_id, university, gpa
+FROM (
+    SELECT *, DENSE_RANK() OVER (PARTITION BY university ORDER BY gpa) AS dr
+    FROM user_profile
+) AS univ_min
+WHERE dr = 1
+ORDER BY university
+</code></pre>
+<blockquote>
+<h3 id="一、聚合类窗口函数"><a href="#一、聚合类窗口函数" class="headerlink" title="一、聚合类窗口函数"></a><strong>一、聚合类窗口函数</strong></h3><pre><code>SUM(), AVG(), MIN(), MAX(), COUNT()
+</code></pre>
+<h3 id="二、排名类窗口函数"><a href="#二、排名类窗口函数" class="headerlink" title="二、排名类窗口函数"></a>二、排名类窗口函数</h3><table>
+<thead>
+<tr>
+<th>ROW_NUMBER()</th>
+<th>行号（相同值不同号）</th>
+<th>1,2,3,4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RANK()</td>
+<td>排名（相同值并列但留空）</td>
+<td>1,2,2,4</td>
+</tr>
+<tr>
+<td>DENSE_RANK()</td>
+<td>密集排名（相同值并列无空）</td>
+<td>1,2,2,3</td>
+</tr>
+</tbody></table>
+<h3 id="三、偏移分析类窗口函数"><a href="#三、偏移分析类窗口函数" class="headerlink" title="三、偏移分析类窗口函数"></a>三、偏移分析类窗口函数</h3><pre><code class="language-sql">LAG(column, n) -- 访问前n行值
+LEAD(column, n) -- 访问后n行值
+FIRST_VALUE(column) -- 窗口第一行
+LAST_VALUE(column) -- 窗口最后一行
+</code></pre>
+<h3 id="四、统计类窗口函数"><a href="#四、统计类窗口函数" class="headerlink" title="四、统计类窗口函数"></a>四、统计类窗口函数</h3><pre><code class="language-sql">PERCENT_RANK() -- 排名百分比 (0-1)
+CUME_DIST()   -- 累计分布 (0-1)
+STDDEV(), VAR() -- 标准差和方差
+</code></pre>
+</blockquote>
+<h3 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h3><h4 id="PARTITION-BY-——-分组处理"><a href="#PARTITION-BY-——-分组处理" class="headerlink" title="PARTITION BY —— 分组处理"></a><code>PARTITION BY</code> —— 分组处理</h4><ul>
+<li>类似 <code>GROUP BY</code>，但<strong>不聚合</strong>，仅把行划分成若干组；</li>
+<li>每组窗口函数单独计算；</li>
+<li>可选，不写则默认全表一组。</li>
+</ul>
+<h4 id="ORDER-BY-——-窗口内排序"><a href="#ORDER-BY-——-窗口内排序" class="headerlink" title="ORDER BY —— 窗口内排序"></a><code>ORDER BY</code> —— 窗口内排序</h4><ul>
+<li>决定行的先后顺序；</li>
+<li>排序顺序直接影响如排名、前后行等函数计算；</li>
+<li>必须写在 <code>OVER(...)</code> 内部，否则是整个结果集排序。</li>
+</ul>
+<h4 id="ROWS-BETWEEN-——-明确窗口范围"><a href="#ROWS-BETWEEN-——-明确窗口范围" class="headerlink" title="ROWS BETWEEN —— 明确窗口范围"></a><code>ROWS BETWEEN</code> —— 明确窗口范围</h4><table>
+<thead>
+<tr>
+<th><code>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code></th>
+<th>从分区第一行到当前行（累计）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING</code></td>
+<td>当前行、前一行、后一行</td>
+</tr>
+<tr>
+<td><code>ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING</code></td>
+<td>当前行到最后一行</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>若不写 <code>ROWS</code>，窗口函数默认是“从分区首行到当前行”或整个分区（函数而异）</p>
+</blockquote>
+<h2 id="if条件表达34"><a href="#if条件表达34" class="headerlink" title="if条件表达34"></a>if条件表达34</h2><pre><code class="language-sql">IF(condition, value_if_true, value_if_false)
+这是一个条件表达式，类似于编程语言中的三元运算符：
+</code></pre>
+<blockquote>
+<pre><code class="language-sql">sum(if(qpd.result=&#39;right&#39;, 1, 0))
+</code></pre>
+<ul>
+<li><strong><code>qpd.result=&#39;right&#39;</code></strong>：条件判断，检查 <code>result</code> 字段是否等于 ‘right’</li>
+<li><strong><code>1</code></strong>：如果条件为真（即 result&#x3D;’right’）时返回的值</li>
+<li><strong><code>0</code></strong>：如果条件为假（即 result≠’right’）时返回的值</li>
+</ul>
+</blockquote>
+<pre><code class="language-sql">select up.device_id,university,
+    count(question_id) as question_cnt,
+    sum(if(qpd.result=&#39;right&#39;, 1, 0)) as right_question_cnt
+from user_profile as up
+
+left join question_practice_detail as qpd
+on qpd.device_id = up.device_id and month(qpd.date) = 8
+
+where up.university = &#39;复旦大学&#39;
+group by up.device_id
+</code></pre>
+<h2 id="正则表达式40"><a href="#正则表达式40" class="headerlink" title="正则表达式40"></a>正则表达式40</h2><blockquote>
+<p>关键字：regexp</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>电话号码必须是 10 位数字。</li>
+<li>电话号码的第一位不能以 0 开头。</li>
+<li>电话号码的格式可以是连续的 10 位数字，或以-分隔的格式（如123-456-7890）。</li>
+</ol>
+</blockquote>
+<pre><code class="language-sql">select *
+from contacts
+where phone_number regexp &#39;^[1-9][0-9]&#123;9&#125;$|^[1-9][0-9]&#123;2&#125;-[0-9]&#123;3&#125;-[0-9]&#123;4&#125;$&#39;
+order by id ASC
+</code></pre>
+<blockquote>
+<p>这个正则表达式的作用如下：</p>
+<ul>
+<li>^ 表示匹配字符串的开头，$ 表示匹配字符串的结尾，确保整个字符串都符合指定的模式。</li>
+<li>[1-9] 表示电话号码的第一位不能是 0，必须是 1 到 9 之间的数字。</li>
+<li>[0-9]{9} 表示接下来的 9 位可以是任意数字，与开头的 [1-9] 组合形成一个完整的 10 位数字电话号码。</li>
+<li>| 是正则表达式的“或”操作符，用于分隔两种不同的匹配模式。</li>
+<li>^[1-9]{2}-[0-9]{3}-[0-9]{4}$ 表示电话号码可以是以 “-” 分隔的格式，其中第一部分是 3 位数字，第二部分是 3 位数字，第三部分是 4 位数字。</li>
+</ul>
+</blockquote>
+<h2 id="数学函数42"><a href="#数学函数42" class="headerlink" title="数学函数42"></a>数学函数42</h2><table>
+<thead>
+<tr>
+<th align="left">返回类型</th>
+<th align="left">描述</th>
+<th align="left">例子</th>
+<th align="left">结果</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>abs(x)</strong></td>
+<td align="left"></td>
+<td align="left"><strong>绝对值</strong></td>
+<td align="left"><strong>abs(-17.4)</strong></td>
+<td><strong>17.4</strong></td>
+</tr>
+<tr>
+<td align="left">cbrt(double)</td>
+<td align="left"></td>
+<td align="left">立方根</td>
+<td align="left">cbrt(27.0)</td>
+<td>3</td>
+</tr>
+<tr>
+<td align="left"><strong>ceil(double&#x2F;numeric)</strong></td>
+<td align="left"></td>
+<td align="left"><strong>向上取整</strong></td>
+<td align="left"><strong>ceil(-42.8)</strong></td>
+<td><strong>-42</strong></td>
+</tr>
+<tr>
+<td align="left">degrees(double)</td>
+<td align="left"></td>
+<td align="left">把弧度转为角度</td>
+<td align="left">degrees(0.5)</td>
+<td>28.6478897565412</td>
+</tr>
+<tr>
+<td align="left">exp(double&#x2F;numeric)</td>
+<td align="left"></td>
+<td align="left">自然指数</td>
+<td align="left">exp(1.0)</td>
+<td>2.71828182845905</td>
+</tr>
+<tr>
+<td align="left"><strong>floor(double&#x2F;numeric)</strong></td>
+<td align="left"></td>
+<td align="left"><strong>向下取整</strong></td>
+<td align="left"><strong>floor(-42.8)</strong></td>
+<td><strong>-43</strong></td>
+</tr>
+<tr>
+<td align="left">ln(double&#x2F;numeric)</td>
+<td align="left"></td>
+<td align="left">自然对数</td>
+<td align="left">ln(2.0)</td>
+<td>0.693147180559945</td>
+</tr>
+<tr>
+<td align="left">log(double&#x2F;numeric)</td>
+<td align="left"></td>
+<td align="left">10为底的对数</td>
+<td align="left">log(100.0)</td>
+<td>2</td>
+</tr>
+<tr>
+<td align="left">log(b numeric,x numeric)</td>
+<td align="left">numeric</td>
+<td align="left">指定底数的对数</td>
+<td align="left">log(2.0, 64.0)</td>
+<td>6.0000000000</td>
+</tr>
+<tr>
+<td align="left"><strong>mod(y, x)</strong></td>
+<td align="left"></td>
+<td align="left"><strong>取余数</strong></td>
+<td align="left"><strong>mod(9,4)</strong></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td align="left">pi()</td>
+<td align="left">double</td>
+<td align="left">“π”常量</td>
+<td align="left">pi()</td>
+<td>3.14159265358979</td>
+</tr>
+<tr>
+<td align="left"><strong>power(a double, b double)</strong></td>
+<td align="left"><strong>double</strong></td>
+<td align="left"><strong>求a的b次幂</strong></td>
+<td align="left"><strong>power(9.0, 3.0)</strong></td>
+<td><strong>729</strong></td>
+</tr>
+<tr>
+<td align="left">power(a numeric, b numeric)</td>
+<td align="left">numeric</td>
+<td align="left">求a的b次幂</td>
+<td align="left">power(9.0, 3.0)</td>
+<td>729</td>
+</tr>
+<tr>
+<td align="left">radians(double)</td>
+<td align="left">double</td>
+<td align="left">把角度转为弧度</td>
+<td align="left">radians(45.0)</td>
+<td>0.785398163397448</td>
+</tr>
+<tr>
+<td align="left">random()</td>
+<td align="left">double</td>
+<td align="left">0.0到1.0之间的随机数值</td>
+<td align="left">random()</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">round(double&#x2F;numeric)</td>
+<td align="left"></td>
+<td align="left">圆整为最接近的整数</td>
+<td align="left">round(42.4)</td>
+<td>42</td>
+</tr>
+<tr>
+<td align="left"><strong>round(v numeric, s int)</strong></td>
+<td align="left"><strong>numeric</strong></td>
+<td align="left"><strong>圆整为s位小数数字</strong></td>
+<td align="left"><strong>round(42.438,2)</strong></td>
+<td><strong>42.44</strong></td>
+</tr>
+<tr>
+<td align="left">sign(double&#x2F;numeric)</td>
+<td align="left"></td>
+<td align="left">参数的符号(-1,0,+1)</td>
+<td align="left">sign(-8.4)</td>
+<td>-1</td>
+</tr>
+<tr>
+<td align="left"><strong>sqrt(double&#x2F;numeric)</strong></td>
+<td align="left"></td>
+<td align="left"><strong>平方根</strong></td>
+<td align="left"><strong>sqrt(2.0)</strong></td>
+<td><strong>1.4142135623731</strong></td>
+</tr>
+<tr>
+<td align="left">trunc(double&#x2F;numeric)</td>
+<td align="left"></td>
+<td align="left"><strong>截断</strong>(向零靠近)</td>
+<td align="left">trunc(42.8)</td>
+<td>42</td>
+</tr>
+<tr>
+<td align="left">trunc(v numeric, s int)</td>
+<td align="left">numeric</td>
+<td align="left"><strong>截断</strong>为s小数位置的数字</td>
+<td align="left">trunc(42.438,2)</td>
+<td>42.43</td>
+</tr>
+</tbody></table>
+<h2 id="Limit关键字"><a href="#Limit关键字" class="headerlink" title="Limit关键字"></a>Limit关键字</h2><h3 id="分页查询"><a href="#分页查询" class="headerlink" title="分页查询"></a>分页查询</h3><blockquote>
+<p>关键字：<code>LIMIT pageSize OFFSET (pageNumber - 1) * pageSize</code></p>
+</blockquote>
+<pre><code class="language-sql">SELECT * FROM Customers
+LIMIT 10 OFFSET 20;
+</code></pre>
+<blockquote>
+<p>表示1：</p>
+<ul>
+<li>跳过前 20 行（OFFSET 20）</li>
+<li>返回接下来的 10 行</li>
+</ul>
+<p>等价于取出第 21～30 行。</p>
+</blockquote>
+<blockquote>
+<p>表示2：</p>
+<ul>
+<li>第 3页，每页 10 条数据</li>
+</ul>
+</blockquote>
+<h3 id="取前-N-条最大-最小的值"><a href="#取前-N-条最大-最小的值" class="headerlink" title="取前 N 条最大&#x2F;最小的值"></a>取前 N 条最大&#x2F;最小的值</h3><blockquote>
+<p>关键字：<code>LIMIT + ORDER BY</code></p>
+</blockquote>
+<pre><code class="language-sql">-- 取销量最高的 3 个商品
+SELECT product_name, sales
+FROM Products
+ORDER BY sales DESC
+LIMIT 3;
+</code></pre>
+<h2 id="技巧注意"><a href="#技巧注意" class="headerlink" title="技巧注意"></a>技巧注意</h2><ol>
+<li><p><strong>是或不是</strong>的时候才能用**“is”<strong>，别的时候有</strong>关联关系<strong>还是</strong>用等号和大于小于**才行</p>
+</li>
+<li><p><code>select</code>关键字后面字段之间使用<code>,</code>间隔，但是最后一个字段后面不能加<code>,</code></p>
+</li>
+<li><p>如果<code>from</code>字段后面<strong>有多个表</strong>，那么在where语句中就必须写出这<strong>多表之间的联系</strong>。</p>
+</li>
+<li><p>如果是多表连接，最后的查询结果必须指明是那个表里面的字段（如果这两个表都有该字段）。</p>
+</li>
+<li><p>在使用多个<code>INNER JOIN</code>关键字内连接其他表时，第一个表的字段与第二个表的字段连接，第二个表的字段与第三个表的字段连接。</p>
+<pre><code class="language-sql">select  user_profile.university,question_detail.difficult_level,ROUND(COUNT(question_practice_detail.question_id) / COUNT(DISTINCT user_profile.device_id), 4) AS avg_answer_cnt
+FROM user_profile
+INNER JOIN question_practice_detail
+on user_profile.device_id = question_practice_detail.device_id
+INNER JOIN question_detail
+on question_practice_detail.question_id = question_detail.question_id
+group by university,difficult_level
+</code></pre>
+</li>
+<li><p>多表连接中select，group by  ,  order by 子句中的字段最好加上表名</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">zhq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/">http://example.com/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">my-blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SQL/">SQL</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/07/14/%E5%BC%80%E5%A4%A9%E8%BE%9F%E5%9C%B0/" title="开天辟地"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">开天辟地</div></div><div class="info-2"><div class="info-item-1">1.第一次使用Hexo2.测试图片功能 </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zhq</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">总结-基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E9%87%8D%E5%A4%8D%E6%95%B0%E6%8D%AE"><span class="toc-number">1.1.</span> <span class="toc-text">去重复数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E7%A9%BA%E5%80%BC"><span class="toc-number">1.2.</span> <span class="toc-text">过滤空值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AA%E5%8C%B9%E9%85%8D%E5%80%BC"><span class="toc-number">1.3.</span> <span class="toc-text">多个匹配值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2%EF%BC%88%E5%8C%B9%E9%85%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">模糊查询（匹配字符串）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAX-%E6%9C%80%E5%A4%A7%E5%87%BD%E6%95%B0%E5%80%BC"><span class="toc-number">1.5.</span> <span class="toc-text">MAX()最大函数值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#avg-%E6%B1%82%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="toc-number">1.6.</span> <span class="toc-text">avg()求平均值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#round-%E5%9B%9B%E8%88%8D%E4%BA%94%E5%85%A5"><span class="toc-number">1.7.</span> <span class="toc-text">round()四舍五入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%BB%84"><span class="toc-number">1.9.</span> <span class="toc-text">分组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E5%88%86%E7%BB%84%E7%9A%84%E5%AD%97%E6%AE%B5%EF%BC%8C%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.9.1.</span> <span class="toc-text">对分组的字段，条件查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5-21-25"><span class="toc-number">1.10.</span> <span class="toc-text">多表连接 21-25</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.10.1.</span> <span class="toc-text">子查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5%E2%80%93INNER-JOIN"><span class="toc-number">1.10.2.</span> <span class="toc-text">内连接–INNER JOIN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6%E5%8F%B3%E8%BF%9E%E6%8E%A529"><span class="toc-number">1.10.3.</span> <span class="toc-text">左右连接29</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5%E4%B8%8E%E5%B7%A6%E5%8F%B3%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.10.4.</span> <span class="toc-text">内连接与左右连接的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2-25"><span class="toc-number">1.10.5.</span> <span class="toc-text">联合查询 25</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E9%80%BB%E8%BE%91"><span class="toc-number">1.11.</span> <span class="toc-text">条件逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B4%E6%9C%88%E6%97%A5%E5%87%BD%E6%95%B028"><span class="toc-number">1.12.</span> <span class="toc-text">年月日函数28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Date%E5%87%BD%E6%95%B029"><span class="toc-number">1.13.</span> <span class="toc-text">Date函数29</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%88%AA%E5%8F%9630-%E6%8B%BC%E6%8E%A5%EF%BC%8C%E8%BD%AC%E5%A4%A7%E5%B0%8F%E5%86%99"><span class="toc-number">1.14.</span> <span class="toc-text">字符串截取30,拼接，转大小写</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#case%E8%AF%AD%E5%8F%A5-%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2-%E7%AC%A8%E8%9B%8B%E9%A2%98%E8%A7%A3"><span class="toc-number">1.14.1.</span> <span class="toc-text">case语句+模糊查询&#x3D;笨蛋题解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B033-41"><span class="toc-number">1.15.</span> <span class="toc-text">窗口函数33,41</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%81%9A%E5%90%88%E7%B1%BB%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="toc-number">1.15.1.</span> <span class="toc-text">一、聚合类窗口函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%8E%92%E5%90%8D%E7%B1%BB%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="toc-number">1.15.2.</span> <span class="toc-text">二、排名类窗口函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%81%8F%E7%A7%BB%E5%88%86%E6%9E%90%E7%B1%BB%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="toc-number">1.15.3.</span> <span class="toc-text">三、偏移分析类窗口函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BB%9F%E8%AE%A1%E7%B1%BB%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="toc-number">1.15.4.</span> <span class="toc-text">四、统计类窗口函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.15.5.</span> <span class="toc-text">关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PARTITION-BY-%E2%80%94%E2%80%94-%E5%88%86%E7%BB%84%E5%A4%84%E7%90%86"><span class="toc-number">1.15.5.1.</span> <span class="toc-text">PARTITION BY —— 分组处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ORDER-BY-%E2%80%94%E2%80%94-%E7%AA%97%E5%8F%A3%E5%86%85%E6%8E%92%E5%BA%8F"><span class="toc-number">1.15.5.2.</span> <span class="toc-text">ORDER BY —— 窗口内排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ROWS-BETWEEN-%E2%80%94%E2%80%94-%E6%98%8E%E7%A1%AE%E7%AA%97%E5%8F%A3%E8%8C%83%E5%9B%B4"><span class="toc-number">1.15.5.3.</span> <span class="toc-text">ROWS BETWEEN —— 明确窗口范围</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE34"><span class="toc-number">1.16.</span> <span class="toc-text">if条件表达34</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F40"><span class="toc-number">1.17.</span> <span class="toc-text">正则表达式40</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B042"><span class="toc-number">1.18.</span> <span class="toc-text">数学函数42</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Limit%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.19.</span> <span class="toc-text">Limit关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.19.1.</span> <span class="toc-text">分页查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E5%89%8D-N-%E6%9D%A1%E6%9C%80%E5%A4%A7-%E6%9C%80%E5%B0%8F%E7%9A%84%E5%80%BC"><span class="toc-number">1.19.2.</span> <span class="toc-text">取前 N 条最大&#x2F;最小的值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E5%B7%A7%E6%B3%A8%E6%84%8F"><span class="toc-number">1.20.</span> <span class="toc-text">技巧注意</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/14/%E7%89%9B%E5%AE%A2%E7%BD%91SQL%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/" title="牛客网SQL刷题总结">牛客网SQL刷题总结</a><time datetime="2025-07-14T02:08:03.000Z" title="发表于 2025-07-14 10:08:03">2025-07-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/14/%E5%BC%80%E5%A4%A9%E8%BE%9F%E5%9C%B0/" title="开天辟地">开天辟地</a><time datetime="2025-07-14T01:41:37.000Z" title="发表于 2025-07-14 09:41:37">2025-07-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/14/hello-world/" title="Hello World">Hello World</a><time datetime="2025-07-14T00:53:58.549Z" title="发表于 2025-07-14 08:53:58">2025-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By zhq</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
