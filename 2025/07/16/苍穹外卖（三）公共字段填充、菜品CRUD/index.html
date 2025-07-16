@@ -1,0 +1,1548 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>苍穹外卖（三）公共字段填充、菜品CRUD | my-blog</title><meta name="author" content="浮生若梦"><meta name="copyright" content="浮生若梦"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="公共字段填充问题分析在新增员工或者新增菜品分类时需要设置创建时间、创建人、修改时间、修改人等字段，在编辑员工或者编辑菜品分类时需要设置修改时间、修改人等字段。这些字段属于公共字段，也就是也就是在我们的系统中很多表中都会有这些字段，如下：    序号 字段名 含义 数据类型    1 create_time 创建时间 datetime   2 create_user 创建人id bigint   3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="苍穹外卖（三）公共字段填充、菜品CRUD">
+<meta property="og:url" content="http://example.com/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/index.html">
+<meta property="og:site_name" content="my-blog">
+<meta property="og:description" content="公共字段填充问题分析在新增员工或者新增菜品分类时需要设置创建时间、创建人、修改时间、修改人等字段，在编辑员工或者编辑菜品分类时需要设置修改时间、修改人等字段。这些字段属于公共字段，也就是也就是在我们的系统中很多表中都会有这些字段，如下：    序号 字段名 含义 数据类型    1 create_time 创建时间 datetime   2 create_user 创建人id bigint   3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/touxiang.jpg">
+<meta property="article:published_time" content="2025-07-16T02:29:34.000Z">
+<meta property="article:modified_time" content="2025-07-16T09:45:48.854Z">
+<meta property="article:author" content="浮生若梦">
+<meta property="article:tag" content="后端开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/touxiang.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "苍穹外卖（三）公共字段填充、菜品CRUD",
+  "url": "http://example.com/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/",
+  "image": "http://example.com/image/touxiang.jpg",
+  "datePublished": "2025-07-16T02:29:34.000Z",
+  "dateModified": "2025-07-16T09:45:48.854Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "浮生若梦",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '苍穹外卖（三）公共字段填充、菜品CRUD',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/image/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/touxiang.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/dingbutu.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">my-blog</span></a><a class="nav-page-title" href="/"><span class="site-name">苍穹外卖（三）公共字段填充、菜品CRUD</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">苍穹外卖（三）公共字段填充、菜品CRUD</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-16T02:29:34.000Z" title="发表于 2025-07-16 10:29:34">2025-07-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-16T09:45:48.854Z" title="更新于 2025-07-16 17:45:48">2025-07-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/">实战项目</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>30分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="公共字段填充"><a href="#公共字段填充" class="headerlink" title="公共字段填充"></a>公共字段填充</h1><h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>在<strong>新增员工</strong>或者<strong>新增菜品分类</strong>时需要设置创建时间、创建人、修改时间、修改人等字段，在<strong>编辑员工</strong>或者<strong>编辑菜品分类</strong>时需要设置修改时间、修改人等字段。这些字段属于公共字段，也就是也就是在我们的系统中很多表中都会有这些字段，如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>字段名</strong></th>
+<th><strong>含义</strong></th>
+<th><strong>数据类型</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>create_time</td>
+<td>创建时间</td>
+<td>datetime</td>
+</tr>
+<tr>
+<td>2</td>
+<td>create_user</td>
+<td>创建人id</td>
+<td>bigint</td>
+</tr>
+<tr>
+<td>3</td>
+<td>update_time</td>
+<td>修改时间</td>
+<td>datetime</td>
+</tr>
+<tr>
+<td>4</td>
+<td>update_user</td>
+<td>修改人id</td>
+<td>bigint</td>
+</tr>
+</tbody></table>
+<p>而针对于这些字段，我们的赋值方式为： </p>
+<p>1). 在新增数据时, 将createTime、updateTime 设置为当前时间, createUser、updateUser设置为当前登录用户ID。</p>
+<p>2). 在更新数据时, 将updateTime 设置为当前时间, updateUser设置为当前登录用户ID。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p><strong>我们使用AOP切面编程，实现功能增强，来完成公共字段自动填充功能。</strong></p>
+<p><strong>实现步骤：</strong></p>
+<p>1). 自定义注解 AutoFill，用于标识需要进行公共字段自动填充的方法</p>
+<p>2). 自定义切面类 AutoFillAspect，统一拦截加入了 AutoFill 注解的方法，通过反射为公共字段赋值</p>
+<p>3). 在 Mapper 的方法上加入 AutoFill 注解</p>
+<h2 id="代码开发"><a href="#代码开发" class="headerlink" title="代码开发"></a>代码开发</h2><p><strong>1）：自定义注解</strong></p>
+<p>进入到sky-server模块，创建com.sky.annotation包。</p>
+<pre><code class="language-java">package com.sky.annotation;
+
+import com.sky.enumeration.OperationType;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 自定义注解，用于标识某个方法需要进行功能字段自动填充处理
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AutoFill &#123;
+    //数据库操作类型：UPDATE INSERT
+    OperationType value();
+&#125;
+</code></pre>
+<blockquote>
+<p>解释如下：</p>
+</blockquote>
+<p><strong>1.<code>@Target(ElementType.METHOD)</code> —— 约束适用范围</strong></p>
+<p><code>@Target</code> 是 <strong>元注解</strong>（用来修饰注解的注解），用来指定 <strong>AutoFill</strong> 只能放在什么元素上。</p>
+<ul>
+<li><code>ElementType.METHOD</code>：说明 <strong><em>只能</em> 用在方法</strong>声明上；不能放在类、字段、参数等位置。</li>
+<li>常见的取值还包括 <code>TYPE</code>（类&#x2F;接口）、<code>FIELD</code>（字段）、<code>PARAMETER</code>（形参）……可以同时指定多个，例如 <code>&#123;ElementType.METHOD, ElementType.CONSTRUCTOR&#125;</code>。</li>
+</ul>
+<p><strong>2.<code>@Retention(RetentionPolicy.RUNTIME)</code> —— 生命周期</strong></p>
+<p>另一枚元注解，决定编译后字节码里保留多久。</p>
+<ul>
+<li><code>SOURCE</code>：只存在于源码阶段，编译后即消失（如 Lombok 的大多数注解）。</li>
+<li><code>CLASS</code>：编译后仍在 <code>.class</code> 文件中，但 <strong>运行时</strong> 通过反射拿不到（默认值）。</li>
+<li><code>RUNTIME</code>：不仅编译期保留，而且 JVM 运行时依旧保留，可用反射读取——<strong>AOP、拦截器、框架自动装配</strong> 等场景全靠它。</li>
+</ul>
+<p>所以，这里选 <code>RUNTIME</code> 是为了在 <strong>拦截数据库操作的方法时</strong> 能获取注解信息，动态填充字段。</p>
+<p><strong>3. <code>OperationType value();</code> —— 注解的属性</strong></p>
+<ul>
+<li>注解内部声明的方法就是<strong>属性</strong>（也叫“成员变量”）。</li>
+<li>返回值可以是 <em>原始类型、String、Class、枚举、注解、以及它们的一维数组</em>。</li>
+<li>如果属性名是 <code>value</code>，使用时可以省略 <code>value =</code>，见下方示例。</li>
+</ul>
+<p><strong>2）：OperationType</strong></p>
+<p>在sky-common模块中定义</p>
+<pre><code class="language-java">package com.sky.enumeration;
+
+/**
+ * 数据库操作类型
+ */
+public enum OperationType &#123;
+
+    /**
+     * 更新操作
+     */
+    UPDATE,
+
+    /**
+     * 插入操作
+     */
+    INSERT
+&#125;
+</code></pre>
+<p><strong>3）：自定义切面AutoFillAspect</strong></p>
+<p>在sky-server模块，创建com.sky.aspect包。</p>
+<pre><code class="language-java">package com.sky.aspect;
+import com.sky.annotation.AutoFill;
+import com.sky.constant.AutoFillConstant;
+import com.sky.context.BaseContext;
+import com.sky.enumeration.OperationType;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
+import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+/**
+ * 自定义切面，实现公共字段自动填充处理逻辑
+ */
+@Aspect
+@Component
+@Slf4j
+public class AutoFillAspect &#123;
+
+    /**
+     * 切入点
+     */
+    @Pointcut(&quot;execution(* com.sky.mapper.*.*(..)) &amp;&amp; @annotation(com.sky.annotation.AutoFill)&quot;)
+    public void autoFillPointCut()&#123;&#125;
+
+    /**
+     * 前置通知，在通知中进行公共字段的赋值
+     */
+    @Before(&quot;autoFillPointCut()&quot;)
+    public void autoFill(JoinPoint joinPoint)&#123;
+        log.info(&quot;开始进行公共字段自动填充...&quot;);
+
+        //获取到当前被拦截的方法上的数据库操作类型
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();//方法签名对象
+        AutoFill autoFill = signature.getMethod().getAnnotation(AutoFill.class);//获得方法上的注解对象
+        OperationType operationType = autoFill.value();//获得数据库操作类型
+
+        //获取到当前被拦截的方法的参数--实体对象
+        Object[] args = joinPoint.getArgs();
+        if(args == null || args.length == 0)&#123;
+            return;
+        &#125;
+
+        Object entity = args[0];
+
+        //准备赋值的数据
+        LocalDateTime now = LocalDateTime.now();
+        Long currentId = BaseContext.getCurrentId();
+
+        //根据当前不同的操作类型，为对应的属性通过反射来赋值
+        if(operationType == OperationType.INSERT)&#123;
+            //为4个公共字段赋值
+            try &#123;
+                Method setCreateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
+                Method setCreateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER, Long.class);
+                Method setUpdateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
+                Method setUpdateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
+
+                //通过反射为对象属性赋值
+                setCreateTime.invoke(entity,now);
+                setCreateUser.invoke(entity,currentId);
+                setUpdateTime.invoke(entity,now);
+                setUpdateUser.invoke(entity,currentId);
+            &#125; catch (Exception e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;else if(operationType == OperationType.UPDATE)&#123;
+            //为2个公共字段赋值
+            try &#123;
+                Method setUpdateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
+                Method setUpdateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
+
+                //通过反射为对象属性赋值
+                setUpdateTime.invoke(entity,now);
+                setUpdateUser.invoke(entity,currentId);
+            &#125; catch (Exception e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><strong>4）：对方法加上AutoFill注解</strong></p>
+<p>Mapper接口的方法上添加，来代替公共字段</p>
+<pre><code class="language-java"> 	
+	/**
+     * 插入数据
+     * @param category
+     */
+    @Insert(&quot;insert into category(type, name, sort, status, create_time, update_time, create_user, update_user)&quot; +
+            &quot; VALUES&quot; +
+            &quot; (#&#123;type&#125;, #&#123;name&#125;, #&#123;sort&#125;, #&#123;status&#125;, #&#123;createTime&#125;, #&#123;updateTime&#125;, #&#123;createUser&#125;, #&#123;updateUser&#125;)&quot;)
+    @AutoFill(value = OperationType.INSERT)
+    void insert(Category category);
+    /**
+     * 根据id修改分类
+     * @param category
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Category category);
+</code></pre>
+<p>这样在Service实现层上就可以省略公共字段的填充。</p>
+<p>例如：</p>
+<pre><code class="language-java">   	/**
+     * 新增分类
+     * @param categoryDTO
+     */
+    public void save(CategoryDTO categoryDTO) &#123;
+        Category category = new Category();
+        //属性拷贝
+        BeanUtils.copyProperties(categoryDTO, category);
+
+        //分类状态默认为禁用状态0
+        category.setStatus(StatusConstant.DISABLE);
+        //在mapper层添加了注解   @AutoFill(value = OperationType.INSERT)，来自挂填充公共字段
+//        //设置创建时间、修改时间、创建人、修改人
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+
+        categoryMapper.insert(category);
+    &#125;
+	/**
+     * 修改分类
+     * @param categoryDTO
+     */
+    public void update(CategoryDTO categoryDTO) &#123;
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryDTO,category);
+        //在mapper层添加了注解   @AutoFill(value = OperationType.update)，来自挂填充公共字段
+//        //设置修改时间、修改人
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+
+        categoryMapper.update(category);
+    &#125;
+</code></pre>
+<h2 id="前后端联调测试"><a href="#前后端联调测试" class="headerlink" title="前后端联调测试"></a>前后端联调测试</h2><img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716152014926.png" class="" alt="image-20250716152014926">
+
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716152150264.png" class="" alt="image-20250716152150264">
+
+<h1 id="新增菜品"><a href="#新增菜品" class="headerlink" title="新增菜品"></a>新增菜品</h1><h2 id="需求分析与设计"><a href="#需求分析与设计" class="headerlink" title="需求分析与设计"></a>需求分析与设计</h2><h3 id="产品原型"><a href="#产品原型" class="headerlink" title="产品原型"></a>产品原型</h3><img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716152348497.png" class="" alt="image-20250716152348497">
+
+<p><strong>业务规则：</strong></p>
+<ul>
+<li>菜品名称必须是唯一的</li>
+<li>菜品必须属于某个分类下，不能单独存在</li>
+<li>新增菜品时可以根据情况选择菜品的口味</li>
+<li>每个菜品必须对应一张图片</li>
+</ul>
+<p>接口设计</p>
+<p><strong>接口设计：</strong></p>
+<ul>
+<li>根据类型查询分类（已完成）</li>
+<li>文件上传</li>
+<li>新增菜品</li>
+</ul>
+<p><strong>1. 根据类型查询分类</strong></p>
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716154458323.png" class="" alt="image-20250716154458323">
+
+<p><strong>2. 文件上传</strong></p>
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716154511145.png" class="" alt="image-20250716154511145">
+
+<p><strong>3. 新增菜品</strong></p>
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716154523491.png" class="" alt="image-20250716154523491">
+
+<p>表设计</p>
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716154545162.png" class="" alt="image-20250716154545162">
+
+<p>通过原型图进行分析：</p>
+<p>新增菜品，其实就是将新增页面录入的菜品信息插入到dish表，如果添加了口味做法，还需要向dish_flavor表插入数据。所以在新增菜品时，涉及到两个表：</p>
+<table>
+<thead>
+<tr>
+<th>表名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dish</td>
+<td>菜品表</td>
+</tr>
+<tr>
+<td>dish_flavor</td>
+<td>菜品口味表</td>
+</tr>
+</tbody></table>
+<p><strong>1). 菜品表:dish</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>字段名</strong></th>
+<th><strong>数据类型</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>bigint</td>
+<td>主键</td>
+<td>自增</td>
+</tr>
+<tr>
+<td>name</td>
+<td>varchar(32)</td>
+<td>菜品名称</td>
+<td>唯一</td>
+</tr>
+<tr>
+<td>category_id</td>
+<td>bigint</td>
+<td>分类id</td>
+<td>逻辑外键</td>
+</tr>
+<tr>
+<td>price</td>
+<td>decimal(10,2)</td>
+<td>菜品价格</td>
+<td></td>
+</tr>
+<tr>
+<td>image</td>
+<td>varchar(255)</td>
+<td>图片路径</td>
+<td></td>
+</tr>
+<tr>
+<td>description</td>
+<td>varchar(255)</td>
+<td>菜品描述</td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>售卖状态</td>
+<td>1起售 0停售</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>datetime</td>
+<td>创建时间</td>
+<td></td>
+</tr>
+<tr>
+<td>update_time</td>
+<td>datetime</td>
+<td>最后修改时间</td>
+<td></td>
+</tr>
+<tr>
+<td>create_user</td>
+<td>bigint</td>
+<td>创建人id</td>
+<td></td>
+</tr>
+<tr>
+<td>update_user</td>
+<td>bigint</td>
+<td>最后修改人id</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>2). 菜品口味表:dish_flavor</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>字段名</strong></th>
+<th><strong>数据类型</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>bigint</td>
+<td>主键</td>
+<td>自增</td>
+</tr>
+<tr>
+<td>dish_id</td>
+<td>bigint</td>
+<td>菜品id</td>
+<td>逻辑外键</td>
+</tr>
+<tr>
+<td>name</td>
+<td>varchar(32)</td>
+<td>口味名称</td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td>varchar(255)</td>
+<td>口味值</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="代码开发-1"><a href="#代码开发-1" class="headerlink" title="代码开发"></a>代码开发</h2><h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>因为在新增菜品时，需要上传菜品对应的图片(文件)，包括后绪其它功能也会使用到文件上传，故要实现通用的文件上传接口。</p>
+<p>文件上传，是指将本地图片、视频、音频等文件上传到服务器上，可以供其他用户浏览或下载的过程。文件上传在项目中应用非常广泛，我们经常发抖音、发朋友圈都用到了文件上传功能。</p>
+<p>实现文件上传服务，需要有存储的支持，那么我们的解决方案将以下几种：</p>
+<ol>
+<li>直接将图片保存到服务的硬盘（springmvc中的文件上传）<ol>
+<li>优点：开发便捷，成本低</li>
+<li>缺点：扩容困难</li>
+</ol>
+</li>
+<li>使用分布式文件系统进行存储<ol>
+<li>优点：容易实现扩容</li>
+<li>缺点：开发复杂度稍大（有成熟的产品可以使用，比如：FastDFS,MinIO）</li>
+</ol>
+</li>
+<li>使用第三方的存储服务（例如OSS）<ol>
+<li>优点：开发简单，拥有强大功能，免维护</li>
+<li>缺点：付费</li>
+</ol>
+</li>
+</ol>
+<p>在本项目选用阿里云的OSS服务进行文件存储。</p>
+<p><strong>实现步骤：</strong></p>
+<p><strong>1). 定义OSS相关配置</strong></p>
+<p>在sky-server模块</p>
+<p>application-dev.yml</p>
+<pre><code class="language-yaml">sky:
+ #阿里云OSS配置
+  alioss:
+    endpoint: 填自己的，github保护
+    accessKeyId: 填自己的，github保护
+    accessKeySecret: 填自己的，github保护
+    bucketName: 填自己的，github保护
+</code></pre>
+<p>application.yml</p>
+<pre><code class="language-yaml">spring:
+  profiles:
+    active: dev    #设置环境
+sky:
+   alioss:
+    endpoint: $&#123;sky.alioss.endpoint&#125;
+    access-key-id: $&#123;sky.alioss.access-key-id&#125;
+    access-key-secret: $&#123;sky.alioss.access-key-secret&#125;
+    bucket-name: $&#123;sky.alioss.bucket-name&#125;
+</code></pre>
+<p><strong>2). 读取OSS配置</strong></p>
+<p>在sky-common模块中，已定义</p>
+<pre><code class="language-java">package com.sky.properties;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Component
+@ConfigurationProperties(prefix = &quot;sky.alioss&quot;)
+@Data
+public class AliOssProperties &#123;
+
+    private String endpoint;
+    private String accessKeyId;
+    private String accessKeySecret;
+    private String bucketName;
+
+&#125;
+</code></pre>
+<p><strong>3). 生成OSS工具类对象</strong></p>
+<p>在sky-server模块</p>
+<pre><code class="language-java">package com.sky.config;
+
+import com.sky.properties.AliOssProperties;
+import com.sky.utils.AliOssUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * 配置类，用于创建AliOssUtil对象
+ */
+@Configuration
+@Slf4j
+public class OssConfiguration &#123;
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties)&#123;
+        log.info(&quot;开始创建阿里云文件上传工具类对象：&#123;&#125;&quot;,aliOssProperties);
+        return new AliOssUtil(aliOssProperties.getEndpoint(),
+                aliOssProperties.getAccessKeyId(),
+                aliOssProperties.getAccessKeySecret(),
+                aliOssProperties.getBucketName());
+    &#125;
+&#125;
+</code></pre>
+<p>其中，AliOssUtil.java已在sky-common模块中定义</p>
+<pre><code class="language-java">package com.sky.utils;
+
+import com.aliyun.oss.ClientException;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.OSSException;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import java.io.ByteArrayInputStream;
+
+@Data
+@AllArgsConstructor
+@Slf4j
+public class AliOssUtil &#123;
+
+    private String endpoint;
+    private String accessKeyId;
+    private String accessKeySecret;
+    private String bucketName;
+
+    /**
+     * 文件上传
+     *
+     * @param bytes
+     * @param objectName
+     * @return
+     */
+    public String upload(byte[] bytes, String objectName) &#123;
+
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+
+        try &#123;
+            // 创建PutObject请求。
+            ossClient.putObject(bucketName, objectName, new ByteArrayInputStream(bytes));
+        &#125; catch (OSSException oe) &#123;
+            System.out.println(&quot;Caught an OSSException, which means your request made it to OSS, &quot;
+                    + &quot;but was rejected with an error response for some reason.&quot;);
+            System.out.println(&quot;Error Message:&quot; + oe.getErrorMessage());
+            System.out.println(&quot;Error Code:&quot; + oe.getErrorCode());
+            System.out.println(&quot;Request ID:&quot; + oe.getRequestId());
+            System.out.println(&quot;Host ID:&quot; + oe.getHostId());
+        &#125; catch (ClientException ce) &#123;
+            System.out.println(&quot;Caught an ClientException, which means the client encountered &quot;
+                    + &quot;a serious internal problem while trying to communicate with OSS, &quot;
+                    + &quot;such as not being able to access the network.&quot;);
+            System.out.println(&quot;Error Message:&quot; + ce.getMessage());
+        &#125; finally &#123;
+            if (ossClient != null) &#123;
+                ossClient.shutdown();
+            &#125;
+        &#125;
+
+        //文件访问路径规则 https://BucketName.Endpoint/ObjectName
+        StringBuilder stringBuilder = new StringBuilder(&quot;https://&quot;);
+        stringBuilder
+                .append(bucketName)
+                .append(&quot;.&quot;)
+                .append(endpoint)
+                .append(&quot;/&quot;)
+                .append(objectName);
+
+        log.info(&quot;文件上传到:&#123;&#125;&quot;, stringBuilder.toString());
+
+        return stringBuilder.toString();
+    &#125;
+&#125;
+</code></pre>
+<p><strong>4). 定义文件上传接口</strong></p>
+<p>在sky-server模块中定义接口</p>
+<pre><code class="language-java">package com.sky.controller.admin;
+
+import com.sky.constant.MessageConstant;
+import com.sky.result.Result;
+import com.sky.utils.AliOssUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.UUID;
+
+/**
+ * 通用接口
+ */
+@RestController
+@RequestMapping(&quot;/admin/common&quot;)
+@Api(tags = &quot;通用接口&quot;)
+@Slf4j
+public class CommonController &#123;
+
+    @Autowired
+    private AliOssUtil aliOssUtil;
+
+    /**
+     * 文件上传
+     * @param file
+     * @return
+     */
+    @PostMapping(&quot;/upload&quot;)
+    @ApiOperation(&quot;文件上传&quot;)
+    public Result&lt;String&gt; upload(MultipartFile file)&#123;
+        log.info(&quot;文件上传：&#123;&#125;&quot;,file);
+
+        try &#123;
+            //原始文件名
+            String originalFilename = file.getOriginalFilename();
+            //截取原始文件名的后缀   dfdfdf.png
+            String extension = originalFilename.substring(originalFilename.lastIndexOf(&quot;.&quot;));
+            //构造新文件名称
+            String objectName = UUID.randomUUID().toString() + extension;
+
+            //文件的请求路径
+            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+            return Result.success(filePath);
+        &#125; catch (IOException e) &#123;
+            log.error(&quot;文件上传失败：&#123;&#125;&quot;, e);
+        &#125;
+
+        return Result.error(MessageConstant.UPLOAD_FAILED);
+    &#125;
+&#125;
+</code></pre>
+<h3 id="新增菜品实现"><a href="#新增菜品实现" class="headerlink" title="新增菜品实现"></a>新增菜品实现</h3><p><strong>1). 设计DTO类</strong></p>
+<p>在sky-pojo模块中</p>
+<pre><code class="language-java">package com.sky.dto;
+
+import com.sky.entity.DishFlavor;
+import lombok.Data;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+public class DishDTO implements Serializable &#123;
+
+    private Long id;
+    //菜品名称
+    private String name;
+    //菜品分类id
+    private Long categoryId;
+    //菜品价格
+    private BigDecimal price;
+    //图片
+    private String image;
+    //描述信息
+    private String description;
+    //0 停售 1 起售
+    private Integer status;
+    //口味
+    private List&lt;DishFlavor&gt; flavors = new ArrayList&lt;&gt;();
+&#125;
+</code></pre>
+<p><strong>2). Controller层</strong></p>
+<p>进入到sky-server模块</p>
+<pre><code class="language-java">package com.sky.controller.admin;
+
+import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
+import com.sky.result.PageResult;
+import com.sky.result.Result;
+import com.sky.service.DishService;
+import com.sky.vo.DishVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * 菜品管理
+ */
+@RestController
+@RequestMapping(&quot;/admin/dish&quot;)
+@Api(tags = &quot;菜品相关接口&quot;)
+@Slf4j
+public class DishController &#123;
+
+    @Autowired
+    private DishService dishService;
+
+    /**
+     * 新增菜品
+     *
+     * @param dishDTO
+     * @return
+     */
+    @PostMapping
+    @ApiOperation(&quot;新增菜品&quot;)
+    public Result save(@RequestBody DishDTO dishDTO) &#123;
+        log.info(&quot;新增菜品：&#123;&#125;&quot;, dishDTO);
+        dishService.saveWithFlavor(dishDTO);//后绪步骤开发
+        return Result.success();
+    &#125;
+&#125;
+</code></pre>
+<p><strong>3). Service层接口</strong></p>
+<pre><code class="language-java">package com.sky.service;
+
+import com.sky.dto.DishDTO;
+import com.sky.entity.Dish;
+
+public interface DishService &#123;
+
+    /**
+     * 新增菜品和对应的口味
+     *
+     * @param dishDTO
+     */
+    public void saveWithFlavor(DishDTO dishDTO);
+
+&#125;
+</code></pre>
+<p><strong>4). Service层实现类</strong></p>
+<pre><code class="language-java">package com.sky.service.impl;
+
+
+@Service
+@Slf4j
+public class DishServiceImpl implements DishService &#123;
+
+    @Autowired
+    private DishMapper dishMapper;
+    @Autowired
+    private DishFlavorMapper dishFlavorMapper;
+
+    /**
+     * 新增菜品和对应的口味
+     *
+     * @param dishDTO
+     */
+    @Transactional
+    public void saveWithFlavor(DishDTO dishDTO) &#123;
+
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+
+        //向菜品表插入1条数据
+        dishMapper.insert(dish);//后绪步骤实现
+
+        //获取insert语句生成的主键值
+        Long dishId = dish.getId();
+
+        List&lt;DishFlavor&gt; flavors = dishDTO.getFlavors();
+        if (flavors != null &amp;&amp; flavors.size() &gt; 0) &#123;
+            flavors.forEach(dishFlavor -&gt; &#123;
+                dishFlavor.setDishId(dishId);
+            &#125;);
+            //向口味表插入n条数据
+            dishFlavorMapper.insertBatch(flavors);//后绪步骤实现
+        &#125;
+    &#125;
+
+&#125;
+</code></pre>
+<p><strong>5). Mapper层</strong></p>
+<p>DishMapper.java中添加</p>
+<pre><code class="language-java">	/**
+     * 插入菜品数据
+     *
+     * @param dish
+     */
+    @AutoFill(value = OperationType.INSERT)
+    void insert(Dish dish);
+</code></pre>
+<p>在&#x2F;resources&#x2F;mapper中创建DishMapper.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;
+&lt;mapper namespace=&quot;com.sky.mapper.DishMapper&quot;&gt;
+
+    &lt;insert id=&quot;insert&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&gt;
+        insert into dish (name, category_id, price, image, description, create_time, update_time, create_user,update_user, status)
+        values (#&#123;name&#125;, #&#123;categoryId&#125;, #&#123;price&#125;, #&#123;image&#125;, #&#123;description&#125;, #&#123;createTime&#125;, #&#123;updateTime&#125;, #&#123;createUser&#125;, #&#123;updateUser&#125;, #&#123;status&#125;)
+    &lt;/insert&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>DishFlavorMapper.java</p>
+<pre><code class="language-java">package com.sky.mapper;
+
+import com.sky.entity.DishFlavor;
+import java.util.List;
+
+@Mapper
+public interface DishFlavorMapper &#123;
+    /**
+     * 批量插入口味数据
+     * @param flavors
+     */
+    void insertBatch(List&lt;DishFlavor&gt; flavors);
+
+&#125;
+</code></pre>
+<p>在&#x2F;resources&#x2F;mapper中创建DishFlavorMapper.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;
+&lt;mapper namespace=&quot;com.sky.mapper.DishFlavorMapper&quot;&gt;
+    &lt;insert id=&quot;insertBatch&quot;&gt;
+        insert into dish_flavor (dish_id, name, value) VALUES
+        &lt;foreach collection=&quot;flavors&quot; item=&quot;df&quot; separator=&quot;,&quot;&gt;
+            (#&#123;df.dishId&#125;,#&#123;df.name&#125;,#&#123;df.value&#125;)
+        &lt;/foreach&gt;
+    &lt;/insert&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h2 id="接口测试"><a href="#接口测试" class="headerlink" title="接口测试"></a>接口测试</h2><img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716164928367.png" class="" alt="image-20250716164928367">
+
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716170757070.png" class="" alt="image-20250716170757070">
+
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716170810326.png" class="" alt="image-20250716170810326">
+
+<h1 id="菜品分页查询"><a href="#菜品分页查询" class="headerlink" title="菜品分页查询"></a>菜品分页查询</h1><h2 id="需求分析和设计"><a href="#需求分析和设计" class="headerlink" title="需求分析和设计"></a>需求分析和设计</h2><h3 id="产品原型-1"><a href="#产品原型-1" class="headerlink" title="产品原型"></a>产品原型</h3><p><strong>菜品分页原型：</strong></p>
+<img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716162007515.png" class="" alt="image-20250716162007515"> 
+
+<p>在菜品列表展示时，除了菜品的基本信息(名称、售价、售卖状态、最后操作时间)外，还有两个字段略微特殊，第一个是图片字段 ，我们从数据库查询出来的仅仅是图片的名字，图片要想在表格中回显展示出来，就需要下载这个图片。第二个是菜品分类，这里展示的是分类名称，而不是分类ID，此时我们就需要根据菜品的分类ID，去分类表中查询分类信息，然后在页面展示。</p>
+<p><strong>业务规则：</strong></p>
+<ul>
+<li>根据页码展示菜品信息</li>
+<li>每页展示10条数据</li>
+<li>分页查询时可以根据需要输入菜品名称、菜品分类、菜品状态进行查询</li>
+</ul>
+<h3 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h3><p>根据上述原型图，设计出相应的接口。</p>
+<p><img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221121202019258.png" alt="image-20221121202019258" style="zoom:50%;" /> <img src="D:/A_MyselfData/cqwm/讲义/讲义/day03/assets/image-20221121202033284.png" alt="image-20221121202033284" style="zoom:50%;" /></p>
+<h2 id="代码开发-2"><a href="#代码开发-2" class="headerlink" title="代码开发"></a>代码开发</h2><h3 id="设计DTO类"><a href="#设计DTO类" class="headerlink" title="设计DTO类"></a>设计DTO类</h3><p><strong>根据菜品分页查询接口定义设计对应的DTO：</strong></p>
+<p>在sky-pojo模块中，已定义</p>
+<pre><code class="language-java">package com.sky.dto;
+
+import lombok.Data;
+import java.io.Serializable;
+
+@Data
+public class DishPageQueryDTO implements Serializable &#123;
+
+    private int page;
+    private int pageSize;
+    private String name;
+    private Integer categoryId; //分类id
+    private Integer status; //状态 0表示禁用 1表示启用
+
+&#125;
+</code></pre>
+<h3 id="设计VO类"><a href="#设计VO类" class="headerlink" title="设计VO类"></a>设计VO类</h3><p><strong>根据菜品分页查询接口定义设计对应的VO：</strong></p>
+<p>在sky-pojo模块中，已定义</p>
+<pre><code class="language-java">package com.sky.vo;
+
+import com.sky.entity.DishFlavor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DishVO implements Serializable &#123;
+
+    private Long id;
+    //菜品名称
+    private String name;
+    //菜品分类id
+    private Long categoryId;
+    //菜品价格
+    private BigDecimal price;
+    //图片
+    private String image;
+    //描述信息
+    private String description;
+    //0 停售 1 起售
+    private Integer status;
+    //更新时间
+    private LocalDateTime updateTime;
+    //分类名称
+    private String categoryName;
+    //菜品关联的口味
+    private List&lt;DishFlavor&gt; flavors = new ArrayList&lt;&gt;();
+&#125;
+</code></pre>
+<h3 id="Controller层"><a href="#Controller层" class="headerlink" title="Controller层"></a>Controller层</h3><p><strong>根据接口定义创建DishController的page分页查询方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 菜品分页查询
+     *
+     * @param dishPageQueryDTO
+     * @return
+     */
+    @GetMapping(&quot;/page&quot;)
+    @ApiOperation(&quot;菜品分页查询&quot;)
+    public Result&lt;PageResult&gt; page(DishPageQueryDTO dishPageQueryDTO) &#123;
+        log.info(&quot;菜品分页查询:&#123;&#125;&quot;, dishPageQueryDTO);
+        PageResult pageResult = dishService.pageQuery(dishPageQueryDTO);//后绪步骤定义
+        return Result.success(pageResult);
+    &#125;
+</code></pre>
+<h3 id="Service层接口"><a href="#Service层接口" class="headerlink" title="Service层接口"></a>Service层接口</h3><p><strong>在 DishService 中扩展分页查询方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 菜品分页查询
+     *
+     * @param dishPageQueryDTO
+     * @return
+     */
+    PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
+</code></pre>
+<h3 id="Service层实现类"><a href="#Service层实现类" class="headerlink" title="Service层实现类"></a>Service层实现类</h3><p><strong>在 DishServiceImpl 中实现分页查询方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 菜品分页查询
+     *
+     * @param dishPageQueryDTO
+     * @return
+     */
+    public PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO) &#123;
+        PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
+        Page&lt;DishVO&gt; page = dishMapper.pageQuery(dishPageQueryDTO);//后绪步骤实现
+        return new PageResult(page.getTotal(), page.getResult());
+    &#125;
+</code></pre>
+<h3 id="Mapper层"><a href="#Mapper层" class="headerlink" title="Mapper层"></a>Mapper层</h3><p><strong>在 DishMapper 接口中声明 pageQuery 方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 菜品分页查询
+     *
+     * @param dishPageQueryDTO
+     * @return
+     */
+    Page&lt;DishVO&gt; pageQuery(DishPageQueryDTO dishPageQueryDTO);
+</code></pre>
+<p><strong>在 DishMapper.xml 中编写SQL：</strong></p>
+<pre><code class="language-xml">&lt;select id=&quot;pageQuery&quot; resultType=&quot;com.sky.vo.DishVO&quot;&gt;
+        select d.* , c.name as categoryName from dish d left outer join category c on d.category_id = c.id
+        &lt;where&gt;
+            &lt;if test=&quot;name != null&quot;&gt;
+                and d.name like concat(&#39;%&#39;,#&#123;name&#125;,&#39;%&#39;)
+            &lt;/if&gt;
+            &lt;if test=&quot;categoryId != null&quot;&gt;
+                and d.category_id = #&#123;categoryId&#125;
+            &lt;/if&gt;
+            &lt;if test=&quot;status != null&quot;&gt;
+                and d.status = #&#123;status&#125;
+            &lt;/if&gt;
+        &lt;/where&gt;
+        order by d.create_time desc
+&lt;/select&gt;
+</code></pre>
+<h2 id="接口测试-1"><a href="#接口测试-1" class="headerlink" title="接口测试"></a>接口测试</h2><h1 id="删除菜品"><a href="#删除菜品" class="headerlink" title="删除菜品"></a>删除菜品</h1><h2 id="需求分析和设计-1"><a href="#需求分析和设计-1" class="headerlink" title="需求分析和设计"></a>需求分析和设计</h2><h3 id="产品原型-2"><a href="#产品原型-2" class="headerlink" title="产品原型"></a>产品原型</h3><p><strong>删除菜品原型：</strong></p>
+<img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221121211236356.png" alt="image-20221121211236356" style="zoom:67%;" /> 
+
+
+
+<p><strong>业务规则：</strong></p>
+<ul>
+<li>可以一次删除一个菜品，也可以批量删除菜品</li>
+<li>起售中的菜品不能删除</li>
+<li>被套餐关联的菜品不能删除</li>
+<li>删除菜品后，关联的口味数据也需要删除掉</li>
+</ul>
+<h3 id="接口设计-1"><a href="#接口设计-1" class="headerlink" title="接口设计"></a>接口设计</h3><p>根据上述原型图，设计出相应的接口。</p>
+<p><img src="D:/A_MyselfData/cqwm/讲义/讲义/day03/assets/image-20221121211801121.png" alt="image-20221121211801121" style="zoom:50%;" /> <img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221121211814429.png" alt="image-20221121211814429" style="zoom:50%;" /></p>
+<p>**注意：**删除一个菜品和批量删除菜品共用一个接口，故ids可包含多个菜品id,之间用逗号分隔。</p>
+<h3 id="表设计"><a href="#表设计" class="headerlink" title="表设计"></a>表设计</h3><p>在进行删除菜品操作时，会涉及到以下三张表。</p>
+<img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221121212436851.png" alt="image-20221121212436851" style="zoom:50%;" /> 
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>在dish表中删除菜品基本数据时，同时，也要把关联在dish_flavor表中的数据一块删除。</li>
+<li>setmeal_dish表为菜品和套餐关联的中间表。</li>
+<li>若删除的菜品数据关联着某个套餐，此时，删除失败。</li>
+<li>若要删除套餐关联的菜品数据，先解除两者关联，再对菜品进行删除。</li>
+</ul>
+<h2 id="代码开发-3"><a href="#代码开发-3" class="headerlink" title="代码开发"></a>代码开发</h2><h3 id="Controller层-1"><a href="#Controller层-1" class="headerlink" title="Controller层"></a>Controller层</h3><p><strong>根据删除菜品的接口定义在DishController中创建方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 菜品批量删除
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation(&quot;菜品批量删除&quot;)
+    public Result delete(@RequestParam List&lt;Long&gt; ids) &#123;
+        log.info(&quot;菜品批量删除：&#123;&#125;&quot;, ids);
+        dishService.deleteBatch(ids);//后绪步骤实现
+        return Result.success();
+    &#125;
+</code></pre>
+<h3 id="Service层接口-1"><a href="#Service层接口-1" class="headerlink" title="Service层接口"></a>Service层接口</h3><p><strong>在DishService接口中声明deleteBatch方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 菜品批量删除
+     *
+     * @param ids
+     */
+    void deleteBatch(List&lt;Long&gt; ids);
+</code></pre>
+<h3 id="Service层实现类-1"><a href="#Service层实现类-1" class="headerlink" title="Service层实现类"></a>Service层实现类</h3><p><strong>在DishServiceImpl中实现deleteBatch方法：</strong></p>
+<pre><code class="language-java">    @Autowired
+    private SetmealDishMapper setmealDishMapper;
+	/**
+     * 菜品批量删除
+     *
+     * @param ids
+     */
+    @Transactional//事务
+    public void deleteBatch(List&lt;Long&gt; ids) &#123;
+        //判断当前菜品是否能够删除---是否存在起售中的菜品？？
+        for (Long id : ids) &#123;
+            Dish dish = dishMapper.getById(id);//后绪步骤实现
+            if (dish.getStatus() == StatusConstant.ENABLE) &#123;
+                //当前菜品处于起售中，不能删除
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            &#125;
+        &#125;
+
+        //判断当前菜品是否能够删除---是否被套餐关联了？？
+        List&lt;Long&gt; setmealIds = setmealDishMapper.getSetmealIdsByDishIds(ids);
+        if (setmealIds != null &amp;&amp; setmealIds.size() &gt; 0) &#123;
+            //当前菜品被套餐关联了，不能删除
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        &#125;
+
+        //删除菜品表中的菜品数据
+        for (Long id : ids) &#123;
+            dishMapper.deleteById(id);//后绪步骤实现
+            //删除菜品关联的口味数据
+            dishFlavorMapper.deleteByDishId(id);//后绪步骤实现
+        &#125;
+    &#125;
+</code></pre>
+<h3 id="Mapper层-1"><a href="#Mapper层-1" class="headerlink" title="Mapper层"></a>Mapper层</h3><p><strong>在DishMapper中声明getById方法，并配置SQL：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据主键查询菜品
+     *
+     * @param id
+     * @return
+     */
+    @Select(&quot;select * from dish where id = #&#123;id&#125;&quot;)
+    Dish getById(Long id);
+</code></pre>
+<p><strong>创建SetmealDishMapper，声明getSetmealIdsByDishIds方法，并在xml文件中编写SQL：</strong></p>
+<pre><code class="language-java">package com.sky.mapper;
+
+import com.sky.entity.SetmealDish;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
+
+@Mapper
+public interface SetmealDishMapper &#123;
+    /**
+     * 根据菜品id查询对应的套餐id
+     *
+     * @param dishIds
+     * @return
+     */
+    //select setmeal_id from setmeal_dish where dish_id in (1,2,3,4)
+    List&lt;Long&gt; getSetmealIdsByDishIds(List&lt;Long&gt; dishIds);
+&#125;
+</code></pre>
+<p>SetmealDishMapper.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;
+&lt;mapper namespace=&quot;com.sky.mapper.SetmealDishMapper&quot;&gt;
+    &lt;select id=&quot;getSetmealIdsByDishIds&quot; resultType=&quot;java.lang.Long&quot;&gt;
+        select setmeal_id from setmeal_dish where dish_id in
+        &lt;foreach collection=&quot;dishIds&quot; item=&quot;dishId&quot; separator=&quot;,&quot; open=&quot;(&quot; close=&quot;)&quot;&gt;
+            #&#123;dishId&#125;
+        &lt;/foreach&gt;
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p><strong>在DishMapper.java中声明deleteById方法并配置SQL：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据主键删除菜品数据
+     *
+     * @param id
+     */
+    @Delete(&quot;delete from dish where id = #&#123;id&#125;&quot;)
+    void deleteById(Long id);
+</code></pre>
+<p><strong>在DishFlavorMapper中声明deleteByDishId方法并配置SQL：</strong></p>
+<pre><code class="language-java">    /**
+     * 根据菜品id删除对应的口味数据
+     * @param dishId
+     */
+    @Delete(&quot;delete from dish_flavor where dish_id = #&#123;dishId&#125;&quot;)
+    void deleteByDishId(Long dishId);
+</code></pre>
+<h2 id="接口测试-2"><a href="#接口测试-2" class="headerlink" title="接口测试"></a>接口测试</h2><h1 id="修改菜品"><a href="#修改菜品" class="headerlink" title="修改菜品"></a>修改菜品</h1><h2 id="需求分析和设计-2"><a href="#需求分析和设计-2" class="headerlink" title="需求分析和设计"></a>需求分析和设计</h2><h3 id="产品原型-3"><a href="#产品原型-3" class="headerlink" title="产品原型"></a>产品原型</h3><p>在菜品管理列表页面点击修改按钮，跳转到修改菜品页面，在修改页面回显菜品相关信息并进行修改，最后点击保存按钮完成修改操作。</p>
+<p><strong>修改菜品原型：</strong></p>
+<img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221122130837173.png" alt="image-20221122130837173" style="zoom:50%;" /> 
+
+
+
+<h3 id="接口设计-2"><a href="#接口设计-2" class="headerlink" title="接口设计"></a>接口设计</h3><p>通过对上述原型图进行分析，该页面共涉及4个接口。</p>
+<p><strong>接口：</strong></p>
+<ul>
+<li>根据id查询菜品</li>
+<li>根据类型查询分类(已实现)</li>
+<li>文件上传(已实现)</li>
+<li>修改菜品</li>
+</ul>
+<p>我们只需要实现<strong>根据id查询菜品</strong>和<strong>修改菜品</strong>两个接口，接下来，我们来重点分析这两个接口。</p>
+<p><strong>1). 根据id查询菜品</strong></p>
+<p><img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221122131733147.png" alt="image-20221122131733147" style="zoom:50%;" /><img src="D:/A_MyselfData/cqwm/讲义/讲义/day03/assets/image-20221122131743509.png" alt="image-20221122131743509" style="zoom:50%;" /></p>
+<p><strong>2). 修改菜品</strong></p>
+<p><img src="D:/A_MyselfData/cqwm/讲义/讲义/day03/assets/image-20221122131837393.png" alt="image-20221122131837393" style="zoom:50%;" /> <img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221122131847583.png" alt="image-20221122131847583" style="zoom:50%;" /></p>
+<img src="D:\我的博客\myblog\source\_posts\苍穹外卖（三）公共字段填充、菜品CRUD\image-20221122131914533.png" alt="image-20221122131914533" style="zoom:50%;" /> 
+
+<p><strong>注:因为是修改功能，请求方式可设置为PUT。</strong></p>
+<h2 id="代码开发-4"><a href="#代码开发-4" class="headerlink" title="代码开发"></a>代码开发</h2><h3 id="根据id查询菜品实现"><a href="#根据id查询菜品实现" class="headerlink" title="根据id查询菜品实现"></a>根据id查询菜品实现</h3><p><strong>1). Controller层</strong></p>
+<p><strong>根据id查询菜品的接口定义在DishController中创建方法：</strong></p>
+<pre><code class="language-java">    /**
+     * 根据id查询菜品
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(&quot;/&#123;id&#125;&quot;)
+    @ApiOperation(&quot;根据id查询菜品&quot;)
+    public Result&lt;DishVO&gt; getById(@PathVariable Long id) &#123;
+        log.info(&quot;根据id查询菜品：&#123;&#125;&quot;, id);
+        DishVO dishVO = dishService.getByIdWithFlavor(id);//后绪步骤实现
+        return Result.success(dishVO);
+    &#125;
+</code></pre>
+<p><strong>2). Service层接口</strong></p>
+<p><strong>在DishService接口中声明getByIdWithFlavor方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据id查询菜品和对应的口味数据
+     *
+     * @param id
+     * @return
+     */
+    DishVO getByIdWithFlavor(Long id);
+</code></pre>
+<p><strong>3). Service层实现类</strong></p>
+<p><strong>在DishServiceImpl中实现getByIdWithFlavor方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据id查询菜品和对应的口味数据
+     *
+     * @param id
+     * @return
+     */
+    public DishVO getByIdWithFlavor(Long id) &#123;
+        //根据id查询菜品数据
+        Dish dish = dishMapper.getById(id);
+
+        //根据菜品id查询口味数据
+        List&lt;DishFlavor&gt; dishFlavors = dishFlavorMapper.getByDishId(id);//后绪步骤实现
+
+        //将查询到的数据封装到VO
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(dishFlavors);
+
+        return dishVO;
+    &#125;
+</code></pre>
+<p><strong>4). Mapper层</strong></p>
+<p><strong>在DishFlavorMapper中声明getByDishId方法，并配置SQL：</strong></p>
+<pre><code class="language-java">    /**
+     * 根据菜品id查询对应的口味数据
+     * @param dishId
+     * @return
+     */
+    @Select(&quot;select * from dish_flavor where dish_id = #&#123;dishId&#125;&quot;)
+    List&lt;DishFlavor&gt; getByDishId(Long dishId);
+</code></pre>
+<h3 id="修改菜品实现"><a href="#修改菜品实现" class="headerlink" title="修改菜品实现"></a>修改菜品实现</h3><p><strong>1). Controller层</strong></p>
+<p><strong>根据修改菜品的接口定义在DishController中创建方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 修改菜品
+     *
+     * @param dishDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation(&quot;修改菜品&quot;)
+    public Result update(@RequestBody DishDTO dishDTO) &#123;
+        log.info(&quot;修改菜品：&#123;&#125;&quot;, dishDTO);
+        dishService.updateWithFlavor(dishDTO);
+        return Result.success();
+    &#125;
+</code></pre>
+<p><strong>2). Service层接口</strong></p>
+<p><strong>在DishService接口中声明updateWithFlavor方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据id修改菜品基本信息和对应的口味信息
+     *
+     * @param dishDTO
+     */
+    void updateWithFlavor(DishDTO dishDTO);
+</code></pre>
+<p><strong>3). Service层实现类</strong></p>
+<p><strong>在DishServiceImpl中实现updateWithFlavor方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据id修改菜品基本信息和对应的口味信息
+     *
+     * @param dishDTO
+     */
+    public void updateWithFlavor(DishDTO dishDTO) &#123;
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+
+        //修改菜品表基本信息
+        dishMapper.update(dish);
+
+        //删除原有的口味数据
+        dishFlavorMapper.deleteByDishId(dishDTO.getId());
+
+        //重新插入口味数据
+        List&lt;DishFlavor&gt; flavors = dishDTO.getFlavors();
+        if (flavors != null &amp;&amp; flavors.size() &gt; 0) &#123;
+            flavors.forEach(dishFlavor -&gt; &#123;
+                dishFlavor.setDishId(dishDTO.getId());
+            &#125;);
+            //向口味表插入n条数据
+            dishFlavorMapper.insertBatch(flavors);
+        &#125;
+    &#125;
+</code></pre>
+<p><strong>4). Mapper层</strong></p>
+<p><strong>在DishMapper中，声明update方法：</strong></p>
+<pre><code class="language-java">	/**
+     * 根据id动态修改菜品数据
+     *
+     * @param dish
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
+</code></pre>
+<p><strong>并在DishMapper.xml文件中编写SQL:</strong></p>
+<pre><code class="language-xml">&lt;update id=&quot;update&quot;&gt;
+        update dish
+        &lt;set&gt;
+            &lt;if test=&quot;name != null&quot;&gt;name = #&#123;name&#125;,&lt;/if&gt;
+            &lt;if test=&quot;categoryId != null&quot;&gt;category_id = #&#123;categoryId&#125;,&lt;/if&gt;
+            &lt;if test=&quot;price != null&quot;&gt;price = #&#123;price&#125;,&lt;/if&gt;
+            &lt;if test=&quot;image != null&quot;&gt;image = #&#123;image&#125;,&lt;/if&gt;
+            &lt;if test=&quot;description != null&quot;&gt;description = #&#123;description&#125;,&lt;/if&gt;
+            &lt;if test=&quot;status != null&quot;&gt;status = #&#123;status&#125;,&lt;/if&gt;
+            &lt;if test=&quot;updateTime != null&quot;&gt;update_time = #&#123;updateTime&#125;,&lt;/if&gt;
+            &lt;if test=&quot;updateUser != null&quot;&gt;update_user = #&#123;updateUser&#125;,&lt;/if&gt;
+        &lt;/set&gt;
+        where id = #&#123;id&#125;
+&lt;/update&gt;
+</code></pre>
+<h2 id="接口测试-3"><a href="#接口测试-3" class="headerlink" title="接口测试"></a>接口测试</h2><h1 id="启售禁售菜品"><a href="#启售禁售菜品" class="headerlink" title="启售禁售菜品"></a>启售禁售菜品</h1><h2 id="根据产品原型进行需求分析，分析出业务规则"><a href="#根据产品原型进行需求分析，分析出业务规则" class="headerlink" title="根据产品原型进行需求分析，分析出业务规则"></a>根据产品原型进行需求分析，分析出业务规则</h2><p>菜品起售表示该菜品可以对外售卖，在用户端可以点餐，菜品停售表示此菜品下架，用户端无法点餐。</p>
+<p>业务规则为：如果执行停售操作，则包含此菜品的套餐也需要停售。</p>
+<h2 id="设计-菜品起售停售-功能的接口"><a href="#设计-菜品起售停售-功能的接口" class="headerlink" title="设计 菜品起售停售 功能的接口"></a>设计 菜品起售停售 功能的接口</h2><img src="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/image-20250716163254205.png" class="" alt="image-20250716163254205">
+
+<h2 id="根据接口设计进行代码实现"><a href="#根据接口设计进行代码实现" class="headerlink" title="根据接口设计进行代码实现"></a>根据接口设计进行代码实现</h2><h4 id="DishController"><a href="#DishController" class="headerlink" title="DishController"></a>DishController</h4><pre><code class="language-java">/**
+     * 菜品起售停售
+     * @param status
+     * @param id
+     * @return
+*/
+@PostMapping(&quot;/status/&#123;status&#125;&quot;)
+@ApiOperation(&quot;菜品起售停售&quot;)
+public Result&lt;String&gt; startOrStop(@PathVariable Integer status, Long id)&#123;
+    dishService.startOrStop(status,id);
+    return Result.success();
+&#125;
+</code></pre>
+<h4 id="DishService"><a href="#DishService" class="headerlink" title="DishService"></a>DishService</h4><pre><code class="language-java">/**
+     * 菜品起售停售
+     * @param status
+     * @param id
+*/
+void startOrStop(Integer status, Long id);
+</code></pre>
+<h4 id="DishServiceImpl"><a href="#DishServiceImpl" class="headerlink" title="DishServiceImpl"></a>DishServiceImpl</h4><pre><code class="language-java">/**
+     * 菜品起售停售
+     *
+     * @param status
+     * @param id
+*/
+@Transactional
+public void startOrStop(Integer status, Long id) &#123;
+    Dish dish = Dish.builder()
+        .id(id)
+        .status(status)
+        .build();
+    dishMapper.update(dish);
+
+    if (status == StatusConstant.DISABLE) &#123;
+        // 如果是停售操作，还需要将包含当前菜品的套餐也停售
+        List&lt;Long&gt; dishIds = new ArrayList&lt;&gt;();
+        dishIds.add(id);
+        // select setmeal_id from setmeal_dish where dish_id in (?,?,?)
+        List&lt;Long&gt; setmealIds = setmealDishMapper.getSetmealIdsByDishIds(dishIds);
+        if (setmealIds != null &amp;&amp; setmealIds.size() &gt; 0) &#123;
+            for (Long setmealId : setmealIds) &#123;
+                Setmeal setmeal = Setmeal.builder()
+                    .id(setmealId)
+                    .status(StatusConstant.DISABLE)
+                    .build();
+                setmealMapper.update(setmeal);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h4 id="SetmealMapper"><a href="#SetmealMapper" class="headerlink" title="SetmealMapper"></a>SetmealMapper</h4><pre><code class="language-java">/**
+     * 根据id修改套餐
+     *
+     * @param setmeal
+ */
+@AutoFill(OperationType.UPDATE)
+void update(Setmeal setmeal);
+</code></pre>
+<h4 id="SetmealMapper-xml"><a href="#SetmealMapper-xml" class="headerlink" title="SetmealMapper.xml"></a>SetmealMapper.xml</h4><pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;
+&lt;mapper namespace=&quot;com.sky.mapper.SetmealMapper&quot;&gt;
+
+    &lt;update id=&quot;update&quot; parameterType=&quot;Setmeal&quot;&gt;
+        update setmeal
+        &lt;set&gt;
+            &lt;if test=&quot;name != null&quot;&gt;
+                name = #&#123;name&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;categoryId != null&quot;&gt;
+                category_id = #&#123;categoryId&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;price != null&quot;&gt;
+                price = #&#123;price&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;status != null&quot;&gt;
+                status = #&#123;status&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;description != null&quot;&gt;
+                description = #&#123;description&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;image != null&quot;&gt;
+                image = #&#123;image&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;updateTime != null&quot;&gt;
+                update_time = #&#123;updateTime&#125;,
+            &lt;/if&gt;
+            &lt;if test=&quot;updateUser != null&quot;&gt;
+                update_user = #&#123;updateUser&#125;
+            &lt;/if&gt;
+        &lt;/set&gt;
+        where id = #&#123;id&#125;
+    &lt;/update&gt;
+
+&lt;/mapper&gt;
+</code></pre>
+<h2 id="接口测试-4"><a href="#接口测试-4" class="headerlink" title="接口测试"></a>接口测试</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">浮生若梦</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/">http://example.com/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">my-blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a></div><div class="post-share"><div class="social-share" data-image="/image/touxiang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/07/16/SpringAop%E5%88%87%E9%9D%A2%E7%B1%BB/" title="SpringAop切面类"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">SpringAop切面类</div></div><div class="info-2"><div class="info-item-1">什么是Aop——-这是基于路径匹配的AOP—切点是方法名  方法中存在相同的业务需求的代码，可以通过AOP动态植入这部分的代码。 AOP的应用场景D         AOP中的主要概念  Aspect中通知的种类  如何写切面类切面：切入方法的集合类 切点：规定执行方法的执行条件 通知：当执行时是如何执行的   实现步骤代码示例  依赖： 	&lt;dependency&gt;       &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;       &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;       &lt;version&gt;3.2.0&lt;/version&gt;     &lt;/dependency&gt;     &lt;dependency&gt;       &lt;groupId&gt;org.springframework&lt;/groupId&gt;       &lt;artifactId&gt;spring...</div></div></div></a><a class="pagination-related" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%880%EF%BC%89%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%83%91/" title="苍穹外卖（0）过程解惑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">苍穹外卖（0）过程解惑</div></div><div class="info-2"><div class="info-item-1">DTO,VO,Entity(实体类)区别   类型 全称 作用 用途    VO Value Object 值对象，表示只读的展示数据 通常用于前端展示层，封装用户需要展示的数据，包装返回的数据   DTO Data Transfer Object 数据传输对象，用于系统内部层与层之间的数据传输 常用于 Controller ↔ Service 或远程接口间的数据传输   实体类（Entity） 实体类&#x2F;模型类 表示数据库中的一张表 用于 ORM 映射（如 JPA、MyBatis），直接与数据库交互   数据库字段与变量名的对应  统一登录验证—JWT令牌统一封装返回给前端的结果-Result封装返回结果进入sky-common模块，在com.sky.result包下定义了Result.java package com.sky.result;  import lombok.Data;  import java.io.Serializable;  /**  * 后端统一返回结果  * @param &lt;T&gt;  */ @Data public class Resu...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%80%EF%BC%89%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/" title="苍穹外卖（一）环境准备"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-15</div><div class="info-item-2">苍穹外卖（一）环境准备</div></div><div class="info-2"><div class="info-item-1">  我的gitee仓库，内涵源代码https://gitee.com/zhouhuiqiang5704/sky-cqwm.git  软件开发流程需求分析完成需求规格说明书、产品原型编写。   需求规格说明书： 一般来说就是使用 Word 文档来描述当前项目的各个组成部分，如：系统定义、应用环境、功能规格、性能需求等，都会在文档中描述。例如：   产品原型：一般是通过网页(html)的形式展示当前的页面展示什么样的数据, 页面的布局是什么样子的，点击某个菜单，打开什么页面，点击某个按钮，出现什么效果，都可以通过产品原型看到。 例如：   设计设计的内容包含 UI设计、数据库设计、接口设计。 UI设计：用户界面的设计，主要设计项目的页面效果，小到一个按钮，大到一个页面布局，还有人机交互逻辑的体现。 数据库设计：需要设计当前项目中涉及到哪些数据库，每一个数据库里面包含哪些表，这些表结构之间的关系是什么样的，表结构中包含哪些字段。例如：   接口设计：通过分析原型图，首先，粗粒度地分析每个页面有多少接口，然后，再细粒度地分析每个接口的传入参数，返回值参数，同时明确接口路径及请求方式。例如...</div></div></div></a><a class="pagination-related" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%880%EF%BC%89%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%83%91/" title="苍穹外卖（0）过程解惑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-15</div><div class="info-item-2">苍穹外卖（0）过程解惑</div></div><div class="info-2"><div class="info-item-1">DTO,VO,Entity(实体类)区别   类型 全称 作用 用途    VO Value Object 值对象，表示只读的展示数据 通常用于前端展示层，封装用户需要展示的数据，包装返回的数据   DTO Data Transfer Object 数据传输对象，用于系统内部层与层之间的数据传输 常用于 Controller ↔ Service 或远程接口间的数据传输   实体类（Entity） 实体类&#x2F;模型类 表示数据库中的一张表 用于 ORM 映射（如 JPA、MyBatis），直接与数据库交互   数据库字段与变量名的对应  统一登录验证—JWT令牌统一封装返回给前端的结果-Result封装返回结果进入sky-common模块，在com.sky.result包下定义了Result.java package com.sky.result;  import lombok.Data;  import java.io.Serializable;  /**  * 后端统一返回结果  * @param &lt;T&gt;  */ @Data public class Resu...</div></div></div></a><a class="pagination-related" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%BA%8C%EF%BC%89%E5%91%98%E5%B7%A5%E7%AE%A1%E7%90%86%E3%80%81%E8%8F%9C%E5%93%81%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86/" title="苍穹外卖（二）员工管理、菜品分类管理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-15</div><div class="info-item-2">苍穹外卖（二）员工管理、菜品分类管理</div></div><div class="info-2"><div class="info-item-1">新增员工需求分析与设计产品原型  当填写完表单信息, 点击”保存”按钮后, 会提交该表单的数据到服务端, 在服务端中需要接受数据, 然后将数据保存至数据库中。 注意事项：  账号必须是唯一的 手机号为合法的11位手机号码 身份证号为合法的18位身份证号码 密码默认为123456  接口设计  表设计新增员工，其实就是将我们新增页面录入的员工数据插入到employee表。 employee表结构：    字段名 数据类型 说明 备注    id bigint 主键 自增   name varchar(32) 姓名    username varchar(32) 用户名 唯一   password varchar(64) 密码    phone varchar(11) 手机号    sex varchar(2) 性别    id_number varchar(18) 身份证号    status Int 账号状态 1启用0禁用   create_time Datetime 创建时间    update_time datetime 最后修改时间    create_user bigin...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/touxiang.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">浮生若梦</div><div class="author-info-description">世界为什么会一直转,因为她不希望我们每个人停留下来,她希望我们向前看!</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85"><span class="toc-number">1.</span> <span class="toc-text">公共字段填充</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.2.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91"><span class="toc-number">1.3.</span> <span class="toc-text">代码开发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E5%90%8E%E7%AB%AF%E8%81%94%E8%B0%83%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.</span> <span class="toc-text">前后端联调测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E8%8F%9C%E5%93%81"><span class="toc-number">2.</span> <span class="toc-text">新增菜品</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.1.</span> <span class="toc-text">需求分析与设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">产品原型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91-1"><span class="toc-number">2.2.</span> <span class="toc-text">代码开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">2.2.1.</span> <span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E8%8F%9C%E5%93%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.2.2.</span> <span class="toc-text">新增菜品实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95"><span class="toc-number">2.3.</span> <span class="toc-text">接口测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8F%9C%E5%93%81%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.</span> <span class="toc-text">菜品分页查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%92%8C%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.1.</span> <span class="toc-text">需求分析和设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B-1"><span class="toc-number">3.1.1.</span> <span class="toc-text">产品原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.1.2.</span> <span class="toc-text">接口设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91-2"><span class="toc-number">3.2.</span> <span class="toc-text">代码开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1DTO%E7%B1%BB"><span class="toc-number">3.2.1.</span> <span class="toc-text">设计DTO类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1VO%E7%B1%BB"><span class="toc-number">3.2.2.</span> <span class="toc-text">设计VO类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Controller%E5%B1%82"><span class="toc-number">3.2.3.</span> <span class="toc-text">Controller层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service%E5%B1%82%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.2.4.</span> <span class="toc-text">Service层接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service%E5%B1%82%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="toc-number">3.2.5.</span> <span class="toc-text">Service层实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mapper%E5%B1%82"><span class="toc-number">3.2.6.</span> <span class="toc-text">Mapper层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95-1"><span class="toc-number">3.3.</span> <span class="toc-text">接口测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%8F%9C%E5%93%81"><span class="toc-number">4.</span> <span class="toc-text">删除菜品</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%92%8C%E8%AE%BE%E8%AE%A1-1"><span class="toc-number">4.1.</span> <span class="toc-text">需求分析和设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B-2"><span class="toc-number">4.1.1.</span> <span class="toc-text">产品原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1-1"><span class="toc-number">4.1.2.</span> <span class="toc-text">接口设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.1.3.</span> <span class="toc-text">表设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91-3"><span class="toc-number">4.2.</span> <span class="toc-text">代码开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Controller%E5%B1%82-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">Controller层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service%E5%B1%82%E6%8E%A5%E5%8F%A3-1"><span class="toc-number">4.2.2.</span> <span class="toc-text">Service层接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service%E5%B1%82%E5%AE%9E%E7%8E%B0%E7%B1%BB-1"><span class="toc-number">4.2.3.</span> <span class="toc-text">Service层实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mapper%E5%B1%82-1"><span class="toc-number">4.2.4.</span> <span class="toc-text">Mapper层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95-2"><span class="toc-number">4.3.</span> <span class="toc-text">接口测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%8F%9C%E5%93%81"><span class="toc-number">5.</span> <span class="toc-text">修改菜品</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E5%92%8C%E8%AE%BE%E8%AE%A1-2"><span class="toc-number">5.1.</span> <span class="toc-text">需求分析和设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B-3"><span class="toc-number">5.1.1.</span> <span class="toc-text">产品原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1-2"><span class="toc-number">5.1.2.</span> <span class="toc-text">接口设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91-4"><span class="toc-number">5.2.</span> <span class="toc-text">代码开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AEid%E6%9F%A5%E8%AF%A2%E8%8F%9C%E5%93%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.2.1.</span> <span class="toc-text">根据id查询菜品实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%8F%9C%E5%93%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.2.2.</span> <span class="toc-text">修改菜品实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95-3"><span class="toc-number">5.3.</span> <span class="toc-text">接口测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AF%E5%94%AE%E7%A6%81%E5%94%AE%E8%8F%9C%E5%93%81"><span class="toc-number">6.</span> <span class="toc-text">启售禁售菜品</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B%E8%BF%9B%E8%A1%8C%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%EF%BC%8C%E5%88%86%E6%9E%90%E5%87%BA%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%99"><span class="toc-number">6.1.</span> <span class="toc-text">根据产品原型进行需求分析，分析出业务规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1-%E8%8F%9C%E5%93%81%E8%B5%B7%E5%94%AE%E5%81%9C%E5%94%AE-%E5%8A%9F%E8%83%BD%E7%9A%84%E6%8E%A5%E5%8F%A3"><span class="toc-number">6.2.</span> <span class="toc-text">设计 菜品起售停售 功能的接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E8%BF%9B%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.3.</span> <span class="toc-text">根据接口设计进行代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DishController"><span class="toc-number">6.3.0.1.</span> <span class="toc-text">DishController</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DishService"><span class="toc-number">6.3.0.2.</span> <span class="toc-text">DishService</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DishServiceImpl"><span class="toc-number">6.3.0.3.</span> <span class="toc-text">DishServiceImpl</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SetmealMapper"><span class="toc-number">6.3.0.4.</span> <span class="toc-text">SetmealMapper</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SetmealMapper-xml"><span class="toc-number">6.3.0.5.</span> <span class="toc-text">SetmealMapper.xml</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95-4"><span class="toc-number">6.4.</span> <span class="toc-text">接口测试</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/16/SpringAop%E5%88%87%E9%9D%A2%E7%B1%BB/" title="SpringAop切面类">SpringAop切面类</a><time datetime="2025-07-16T02:39:10.000Z" title="发表于 2025-07-16 10:39:10">2025-07-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/16/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%AC%E5%85%B1%E5%AD%97%E6%AE%B5%E5%A1%AB%E5%85%85%E3%80%81%E8%8F%9C%E5%93%81CRUD/" title="苍穹外卖（三）公共字段填充、菜品CRUD">苍穹外卖（三）公共字段填充、菜品CRUD</a><time datetime="2025-07-16T02:29:34.000Z" title="发表于 2025-07-16 10:29:34">2025-07-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%880%EF%BC%89%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%83%91/" title="苍穹外卖（0）过程解惑">苍穹外卖（0）过程解惑</a><time datetime="2025-07-15T03:37:18.000Z" title="发表于 2025-07-15 11:37:18">2025-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%BA%8C%EF%BC%89%E5%91%98%E5%B7%A5%E7%AE%A1%E7%90%86%E3%80%81%E8%8F%9C%E5%93%81%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86/" title="苍穹外卖（二）员工管理、菜品分类管理">苍穹外卖（二）员工管理、菜品分类管理</a><time datetime="2025-07-15T03:26:11.000Z" title="发表于 2025-07-15 11:26:11">2025-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/15/%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96%EF%BC%88%E4%B8%80%EF%BC%89%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/" title="苍穹外卖（一）环境准备">苍穹外卖（一）环境准备</a><time datetime="2025-07-15T03:18:26.000Z" title="发表于 2025-07-15 11:18:26">2025-07-15</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By 浮生若梦</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
